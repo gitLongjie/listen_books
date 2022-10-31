@@ -1,16 +1,17 @@
 import 'package:common_utils/common_utils.dart';
 import 'package:flutter/material.dart';
+import 'package:listen_books/model/play_songs_model.dart';
 import 'package:listen_books/widget/common_text_style.dart';
 
 class SongProgressWidget extends StatelessWidget {
-  // final PlaySongsModel model;
+  final PlaySongsModel model;
 
-  const SongProgressWidget({super.key});
+  const SongProgressWidget(this.model, {super.key});
 
   @override
   Widget build(BuildContext context) {
     return StreamBuilder<String>(
-      //stream: model.curPositionStream,
+      stream: model.curPositionStream,
       builder: (context, snapshot) {
         if (snapshot.hasData) {
           var totalTime =

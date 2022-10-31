@@ -1,5 +1,5 @@
 
-import 'package:listen_books/model/Lyric.dart';
+import 'package:listen_books/model/lyric.dart';
 
 class Utils {
   /// 格式化歌词

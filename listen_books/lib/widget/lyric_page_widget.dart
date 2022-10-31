@@ -4,7 +4,7 @@ import 'dart:async';
 import 'package:flutter/material.dart';
 // import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:listen_books/context.dart';
-import 'package:listen_books/model/Lyric.dart';
+import 'package:listen_books/model/lyric.dart';
 import 'package:listen_books/model/play_songs_model.dart';
 import 'package:listen_books/utils/net_utils.dart';
 import 'package:listen_books/utils/utils.dart';
@@ -13,9 +13,9 @@ import 'package:listen_books/widget/lyric_widget.dart';
 
 
 class LyricPage extends StatefulWidget {
-  // final PlaySongsModel? model;
+  final PlaySongsModel model;// = PlaySongsModel();
 
-  const LyricPage({super.key});
+  const LyricPage(this.model, {super.key});
 
   @override
   State<StatefulWidget> createState() => _LyricPageState();
@@ -35,7 +35,7 @@ class _LyricPageState extends State<LyricPage> with TickerProviderStateMixin {
   void initState() {
     super.initState();
     WidgetsBinding.instance.addPostFrameCallback((call) {
-      curSongId = 0;//widget.model.curSong.id;
+      curSongId = widget.model.curSong.id;
        _request();
     });
 
@@ -84,7 +84,7 @@ class _LyricPageState extends State<LyricPage> with TickerProviderStateMixin {
                   _lyricWidget.canvasSize.height / 2 - 100 &&
               e.localPosition.dy <
                   _lyricWidget.canvasSize.height / 2 + 100) {
-            // widget.model!.seekPlay(_lyricWidget.dragLineTime);
+            widget.model.seekPlay(_lyricWidget.dragLineTime);
           }
         } : null,
         onVerticalDragUpdate: (e) {
@@ -100,7 +100,7 @@ class _LyricPageState extends State<LyricPage> with TickerProviderStateMixin {
           cancelDragTimer();
         },
         child: StreamBuilder<String>(
-          // stream: widget.model!.curPositionStream,
+          stream: widget.model.curPositionStream,
           builder: (context, snapshot) {
             if (snapshot.hasData) {
               var curTime = double.parse(snapshot.data!

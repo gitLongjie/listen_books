@@ -80,7 +80,7 @@ class _HomePageState extends State<HomePage> {
         ),
       ),
       floatingActionButton: FloatingActionButton(
-        onPressed:() {NavigatorUtil.push(context, const PlayPage('_title'));},
+        onPressed:() {NavigatorUtil.push(context, const PlayPage());},
         child: const Icon(Icons.play_arrow),
       ),
       floatingActionButtonLocation: FloatingActionButtonLocation.centerDocked,

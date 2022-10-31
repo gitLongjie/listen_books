@@ -1,8 +1,11 @@
+import 'package:audioplayers/audioplayers.dart';
 import 'package:flutter/material.dart';
+import 'package:listen_books/model/play_songs_model.dart';
 
 class PlayBottomMenuWidget extends StatelessWidget {
+  final PlaySongsModel model;
 
-  const PlayBottomMenuWidget({super.key});
+  const PlayBottomMenuWidget(this.model, {super.key});
 
   @override
   Widget build(BuildContext context) {
@@ -15,8 +18,9 @@ class PlayBottomMenuWidget extends StatelessWidget {
           IconButton(
             icon: const Icon(
               Icons.sync,
-              color: Colors.white,
+              color: Color.fromARGB(255, 168, 44, 44),
             ),
+            hoverColor: Colors.white70,
             onPressed: () {  },
           ),
           IconButton(
@@ -27,11 +31,11 @@ class PlayBottomMenuWidget extends StatelessWidget {
             onPressed: () {  },
           ),
           IconButton(
-            icon: const Icon(
-              Icons.pause_circle,
+            icon: Icon(
+              model.curState == PlayerState.playing ? Icons.pause_circle : Icons.play_circle,
               color: Colors.white,
             ),
-            onPressed: () {  },
+            onPressed: () {  model.togglePlay();},
           ),
           IconButton(
             icon: const Icon(

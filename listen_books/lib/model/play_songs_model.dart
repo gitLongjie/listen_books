@@ -1,46 +1,46 @@
 import 'dart:async';
 import 'dart:convert';
 
-// import 'package:audioplayers/audioplayers.dart';
+import 'package:audioplayers/audioplayers.dart';
 // import 'package:common_utils/common_utils.dart';
 import 'package:flutter/material.dart';
 import 'package:listen_books/model/song.dart';
 
 
 class PlaySongsModel with ChangeNotifier{
-  // AudioPlayer _audioPlayer = AudioPlayer();
+  final AudioPlayer _audioPlayer = AudioPlayer();
   final StreamController<String> _curPositionController = StreamController<String>.broadcast();
 
   List<Song> _songs = [];
   int curIndex = 0;
   Duration curSongDuration = const Duration();
-  // AudioPlayerState _curState;
+  PlayerState _curState = PlayerState.stopped;
 
   List<Song> get allSongs => _songs;
   Song get curSong => _songs[curIndex];
   Stream<String> get curPositionStream => _curPositionController.stream;
-  // AudioPlayerState get curState => _curState;
+  PlayerState get curState => _curState;
 
 
   void init() {
-    // _audioPlayer.setReleaseMode(ReleaseMode.STOP);
+    _audioPlayer.setReleaseMode(ReleaseMode.stop);
     // 播放状态监听
-    // _audioPlayer.onPlayerStateChanged.listen((state) {
-    //   _curState = state;
-    //   /// 先做顺序播放
-    //   if(state == AudioPlayerState.COMPLETED){
-    //     nextPlay();
-    //   }
-    //   // 其实也只有在播放状态更新时才需要通知。
-    //   notifyListeners();
-    // });
-    // _audioPlayer.onDurationChanged.listen((d) {
-    //   curSongDuration = d;
-    // });
-    // // 当前播放进度监听
-    // _audioPlayer.onAudioPositionChanged.listen((Duration p) {
-    //   sinkProgress(p.inMilliseconds > curSongDuration.inMilliseconds ? curSongDuration.inMilliseconds : p.inMilliseconds);
-    // });
+    _audioPlayer.onPlayerStateChanged.listen((state) {
+      _curState = state;
+      /// 先做顺序播放
+      if(state == PlayerState.completed){
+        nextPlay();
+      }
+      // 其实也只有在播放状态更新时才需要通知。
+      notifyListeners();
+    });
+    _audioPlayer.onDurationChanged.listen((d) {
+      curSongDuration = d;
+    });
+    // 当前播放进度监听
+    _audioPlayer.onPositionChanged.listen((Duration p) {
+      sinkProgress(p.inMilliseconds > curSongDuration.inMilliseconds ? curSongDuration.inMilliseconds : p.inMilliseconds);
+    });
   }
 
   // 歌曲进度
@@ -68,36 +68,37 @@ class PlaySongsModel with ChangeNotifier{
 
   /// 播放
   void play() async {
-    var songId = this._songs[curIndex].id;
+    // var songId = _songs[curIndex].id;
     // var url = await NetUtils.getMusicURL(null, songId);
-
-    // _audioPlayer.play(url);
+    var url = "https://ws.stream.qqmusic.qq.com/C400000XLtiO1pYlSu.m4a?guid=100231&vkey=0948A90522E247D9684C7F398DAF684158C46AA966C7E264E15EF547BE3FA0F8909CAFBD9D5C1CB24FD22718189703EA588FCA6D4580D5E9&uin=626567678&fromtag=103032";
+    Source source = UrlSource(url);
+    _audioPlayer.play(source);
     saveCurSong();
   }
 
   /// 暂停、恢复
   void togglePlay(){
-    // if (_audioPlayer.state == AudioPlayerState.PAUSED) {
-    //   resumePlay();
-    // } else {
-    //   pausePlay();
-    // }
+    if (_audioPlayer.state == PlayerState.paused) {
+      resumePlay();
+    } else {
+      pausePlay();
+    }
   }
 
   // 暂停
   void pausePlay() {
-    // _audioPlayer.pause();
+    _audioPlayer.pause();
   }
 
   /// 跳转到固定时间
   void seekPlay(int milliseconds){
-    // _audioPlayer.seek(Duration(milliseconds: milliseconds));
+    _audioPlayer.seek(Duration(milliseconds: milliseconds));
     resumePlay();
   }
 
   /// 恢复播放
   void resumePlay() {
-    // _audioPlayer.resume();
+    _audioPlayer.resume();
   }
 
   /// 下一首
@@ -130,7 +131,7 @@ class PlaySongsModel with ChangeNotifier{
   void dispose() {
     super.dispose();
     _curPositionController.close();
-    // _audioPlayer.dispose();
+    _audioPlayer.dispose();
   }
 
 

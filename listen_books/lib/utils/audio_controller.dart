@@ -4,7 +4,7 @@ import 'package:flutter/foundation.dart';
 import 'package:listen_books/model/media_list.dart';
 import 'package:listen_books/utils/media_util.dart';
 
-enum PlayerState { loading, playing, paused, stopped, completed }
+enum ControlPlayerState { loading, playing, paused, stopped, completed }
 
 class MusicListener {
   Function getName;
@@ -26,7 +26,7 @@ class MusicController with ChangeNotifier {
   // late AudioPlayer audioPlayer;
   late PlayList playList;
 
-  PlayerState playerState = PlayerState.loading;
+  ControlPlayerState playerState = ControlPlayerState.loading;
   late StreamSubscription _positionSubscription;
   late StreamSubscription _audioPlayerStateSubscription;
 
@@ -149,16 +149,16 @@ class MusicController with ChangeNotifier {
     bool isContinue = path == this.url;
     if (!isContinue) {
       this.url = path;
-      if (playerState != PlayerState.loading) {
+      if (playerState != ControlPlayerState.loading) {
         // await audioPlayer.stop(); // 注意这儿要用await，不然异步到后面，状态会不对。
       }
       // 不是继续播放，就进入加载状态
       duration = 0;
       notifyMusicListeners(
-          (listener) => listener.onStateChanged(PlayerState.loading));
+          (listener) => listener.onStateChanged(ControlPlayerState.loading));
     }
 
-    if (path == this.url && playerState == PlayerState.paused) {
+    if (path == this.url && playerState == ControlPlayerState.paused) {
       print('播放相同的歌曲，从暂停界面切换过来，继续暂停。 path: $path , url: $url ');
       pause();
       notifyMusicListeners((listener) => listener.onStart(duration));
@@ -177,7 +177,7 @@ class MusicController with ChangeNotifier {
 
   Future seek(double millseconds) async {
     // await audioPlayer?.seek(millseconds / 1000);
-    if (playerState == PlayerState.paused) {
+    if (playerState == ControlPlayerState.paused) {
       //play();
     }
   }
@@ -187,7 +187,7 @@ class MusicController with ChangeNotifier {
   }
 
   Future toggle() async {
-    if (playerState == PlayerState.playing) {
+    if (playerState == ControlPlayerState.playing) {
       await pause();
     } else {
       await play(path: '');
@@ -232,7 +232,7 @@ class MusicController with ChangeNotifier {
     return playList.getCurrentSong();
   }
 
-  PlayerState getCurrentState() {
+  ControlPlayerState getCurrentState() {
     return playerState;
   }
 
@@ -251,7 +251,7 @@ class MusicController with ChangeNotifier {
     }
     if (nextSong == null) {
       notifyMusicListeners(
-          (listener) => listener.onStateChanged(PlayerState.stopped));
+          (listener) => listener.onStateChanged(ControlPlayerState.stopped));
     }
     notifyListeners();
   }

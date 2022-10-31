@@ -4,7 +4,7 @@ import 'dart:ui' as prefix0;
 // import 'package:common_utils/common_utils.dart';
 import 'package:flutter/material.dart';
 // import 'package:flutter_screenutil/flutter_screenutil.dart';
-import 'package:listen_books/model/Lyric.dart';
+import 'package:listen_books/model/lyric.dart';
 import 'package:listen_books/widget/common_text_style.dart';
 
 class LyricWidget extends CustomPainter with ChangeNotifier {
