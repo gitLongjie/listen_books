@@ -1,300 +1,163 @@
+import 'dart:ui';
+import 'dart:ui' as prefix0;
+
+// import 'package:common_utils/common_utils.dart';
 import 'package:flutter/material.dart';
+// import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:listen_books/model/Lyric.dart';
-// import 'package:listen_books/utils/screen_size.dart';
-// import 'package:listen_books/utils/shared_preference_util.dart';
+import 'package:listen_books/widget/common_text_style.dart';
 
-import 'gradient_text_widget.dart';
+class LyricWidget extends CustomPainter with ChangeNotifier {
+  List<Lyric> lyric;
+  List<TextPainter> lyricPaints = []; // 其他歌词
+  double _offsetY = 0;
+  int curLine;
+  late Paint linePaint;
+  bool isDragging = false; // 是否正在人为拖动
+  double totalHeight = 0; // 总长度
+  late TextPainter draggingLineTimeTextPainter; // 正在拖动中当前行的时间
+  Size canvasSize = Size.zero;
+  int dragLineTime = 0;
 
-class LyricPage extends StatefulWidget {
-  late _LyricPageState _state;
+  double get offsetY => _offsetY;
 
-  LyricPage({required Key key}) : super(key: key);
-
-  @override
-  State<StatefulWidget> createState() => _LyricPageState();
-
-  // 对比发现，从外面调用触发build的次数要少，而不是从父控件传入position。
-
-  int updatePositionCount = 0;
-  void updatePosition(int position, {isTaping: false}) {
-    //print('updatePosition: $position');
-    if (_state == null || _state.lyric == null) {
-      if (updatePositionCount > 5) {
-        return;
-      }
-      print('_LyricPageState is null, retryCount: $updatePositionCount');
-      Future.delayed(Duration(milliseconds: 200)).then((_) {
-        updatePositionCount++;
-        updatePosition(position, isTaping: isTaping);
-      });
-    } else {
-      updatePositionCount = 0;
-      _state.updatePosition(position, isTaping: isTaping);
-    }
-  }
-
-  int updateSongCount = 0;
-  void updateSong(Map song) {
-    if (_state == null) {
-      if (updateSongCount > 5) {
-        return;
-      }
-      print('_LyricPageState is null, retryCount: $updateSongCount');
-      Future.delayed(Duration(milliseconds: 200)).then((_) {
-        updateSongCount++;
-        updateSong(song);
-      });
-    } else {
-      updateSongCount = 0;
-      _state.updateSong(song);
-    }
-  }
-}
-
-class _LyricPageState extends State<LyricPage> {
-  late Map song;
-  final double itemHeight = 30.0;
-  int visibleItemSize = 7;
-  late Lyric lyric;
-  late ScrollController _controller;
-  int _currentIndex = -1;
-  int position = 0;
-  bool success = true;
-  bool isFirst = true;
-  bool isItemsEmpty = false;
-  bool islyricMask = true;
-
-  @override
-  void initState() {
-    super.initState();
-
-    // visibleItemSize = ScreenSize.height < 700 ? 5 : 7;
-    _controller = ScrollController();
-
-    // islyricMask = SharedPreferenceUtil.getInstance().get('lyricMask') ?? true;
-
-    print('LyricPage initState, 歌词可见行数：$visibleItemSize');
-  }
-
-  void _getLyric() {
-    // 进入加载中状态
-    setState(() {
-      // lyric = null;
-    });
-    // 获取歌词
-    // MusicDao.getLyric(song['id']).then((result) {
-    //   if (mounted && result != null) {
-    //     setState(() {
-    //       success = true;
-    //       lyric = result;
-    //     });
-    //   }
-    // }).catchError((e) {
-    //   print(e);
-    //   setState(() {
-    //     success = false;
-    //   });
-    // });
-  }
-
-  @override
-  void dispose() {
-    super.dispose();
-    _controller.dispose();
-  }
-
-  Widget _buildInfo(String msg) {
-    isItemsEmpty = true;
-    return Center(
-        child:
-            Text(msg, style: TextStyle(color: Colors.white30, fontSize: 13.0)));
-  }
-
-  @override
-  Widget build(BuildContext context) {
-    //print('LyricPage build $_currentIndex');
-
-    if (!success) {
-      return _buildInfo('歌词加载失败');
-    } else if (lyric == null) {
-      return _buildInfo('歌词加载中...');
-    } else if (lyric.items.length == 0) {
-      return _buildInfo('...纯音乐，无歌词...');
-    } else {
-      isItemsEmpty = false;
-    }
-
-    return Container(
-        alignment: Alignment.center,
-        child: ConstrainedBox(
-          constraints: BoxConstraints(maxHeight: itemHeight * visibleItemSize),
-          child: CustomScrollView(controller: _controller, slivers: <Widget>[
-            SliverList(
-                delegate: SliverChildBuilderDelegate(
-              (BuildContext context, int index) {
-                return _getItem(lyric.items[index]);
-              },
-              childCount: lyric.items.length,
-            )),
-          ]),
-        ));
-  }
-
-  Widget _getItem(LyricItem item) {
-    bool isCurrent = item.index == _currentIndex;
-    Text itemText = Text(
-      item.content,
-      maxLines: 1,
-      overflow: TextOverflow.ellipsis,
-      style: TextStyle(
-          fontSize: 13.0, color: isCurrent ? Colors.white : Colors.white60),
-    );
-
-    if (isCurrent) {
-      if (islyricMask) {
-        itemText = GradientText(text: itemText) as Text;
-        currentLyricItem = itemText as GradientText;
-      }
-    }
-
-    return Container(
-        padding: EdgeInsets.symmetric(horizontal: 12.0),
-        alignment: Alignment.center,
-        height: itemHeight,
-        child: itemText);
-  }
-
-  late GradientText currentLyricItem;
-  void updateCurrentLyricItem() {
-    if (islyricMask &&
-        currentLyricItem != null &&
-        _currentIndex >= 0 &&
-        _currentIndex < lyric.items.length) {
-      LyricItem item = lyric.items[_currentIndex];
-      double offsetX; // 遮住的比例
-      if (item.duration > 0) {
-        offsetX = (position - item.position) / item.duration;
+  set offsetY(double value) {
+    // 判断如果是在拖动状态下
+    if (isDragging) {
+      // 不能小于最开始的位置
+      if (_offsetY.abs() < lyricPaints[0].height + 30) {
+        _offsetY = (lyricPaints[0].height + 30) * -1;
+      } else if (_offsetY.abs() > (totalHeight + lyricPaints[0].height + 30)) {
+        // 不能大于最大位置
+        _offsetY = (totalHeight + lyricPaints[0].height + 30) * -1;
       } else {
-        offsetX = 1.0;
+        _offsetY = value;
       }
-      currentLyricItem.setOffsetX(offsetX);
-    }
-  }
-
-  /// 比较播放位置和歌词时间戳，获取当前是哪条歌词。
-  /// milliseconds 当前播放位置，单位：毫秒
-  int getIndexByTime(int milliseconds) {
-    if (lyric == null ||
-        lyric.items.length == 0 ||
-        lyric.items[0].position > milliseconds) {
-      // 刚开始未选中的情况。
-      return -1;
-    }
-
-    // 选取比较的范围，不用每次都从头遍历。
-    int start;
-    int end;
-    if (_currentIndex <= 1 || _currentIndex >= lyric.items.length) {
-      start = 0;
-      end = lyric.items.length;
-    } else if (milliseconds >= lyric.items[_currentIndex - 1].position) {
-      start = _currentIndex;
-      end = lyric.items.length;
     } else {
-      start = 0;
-      end = _currentIndex;
+      _offsetY = value;
     }
-
-    int index = start;
-    for (; index < end - 1; index++) {
-      if (lyric.items[index + 1].position >= milliseconds) {
-        break;
-      }
-    }
-    return index;
+    notifyListeners();
   }
 
-  void scrollTo(int index) {
-    int itemSize = lyric.items.length;
-    // 选中的Index是否超出边界
-    /* if (index < 0 || index >= itemSize) {
-      return;
-    } */
+  LyricWidget(this.lyric, this.curLine) {
+    linePaint = Paint()
+      ..color = Colors.white12
+      ..strokeWidth = 1;
+    lyricPaints.addAll(lyric
+        .map((l) => TextPainter(
+            text: TextSpan(text: l.lyric, style: commonGrayTextStyle),
+            textDirection: TextDirection.ltr))
+        .toList());
+    // 首先对TextPainter 进行 layout，否则会报错
+    _layoutTextPainters();
+  }
 
-    int offset = (visibleItemSize - 1) ~/ 2;
-    int topIndex = index - offset; // 选中元素居中时,top的Index
-    int bottomIndex = index + offset;
+  @override
+  void paint(Canvas canvas, Size size) {
+    canvasSize = size;
+    var y = _offsetY + size.height / 2 + lyricPaints[0].height / 2;
 
-    setState(() {
-      _currentIndex = index;
+    for (int i = 0; i < lyric.length; i++) {
+      if (y > size.height || y < (0 - lyricPaints[i].height / 2)) {
+      } else {
+        // 画每一行歌词
+        if (curLine == i) {
+          // 如果是当前行
+          lyricPaints[i].text =
+              TextSpan(text: lyric[i].lyric, style: commonWhiteTextStyle);
+          lyricPaints[i].layout();
+        } else if (isDragging &&
+            i ==
+                (_offsetY / (lyricPaints[0].height + 30))
+                        .abs()
+                        .round() - 1) {
+          // 如果是拖动状态中的当前行
+          lyricPaints[i].text =
+              TextSpan(text: lyric[i].lyric, style: commonWhite70TextStyle);
+          lyricPaints[i].layout();
+        } else {
+          lyricPaints[i].text =
+              TextSpan(text: lyric[i].lyric, style: commonGrayTextStyle);
+          lyricPaints[i].layout();
+        }
+
+        lyricPaints[i].paint(
+          canvas,
+          Offset((size.width - lyricPaints[i].width) / 2, y),
+        );
+      }
+      // 计算偏移量
+      y += lyricPaints[i].height + 30;
+      lyric[i].offset = y;
+    }
+
+    // 拖动状态下显示的东西
+    if (isDragging) {
+      // 画 icon
+      const icon = Icons.play_arrow;
+      var builder = prefix0.ParagraphBuilder(prefix0.ParagraphStyle(
+        fontFamily: icon.fontFamily,
+        fontSize: 60,
+      ))
+        ..addText(String.fromCharCode(icon.codePoint));
+      var para = builder.build();
+      para.layout(const prefix0.ParagraphConstraints(
+          width: 60,
+        )
+      );
+      canvas.drawParagraph(
+          para,
+          Offset(10,
+              size.height / 2 - 60));
+
+      // 画线
+      canvas.drawLine(
+          Offset(80,
+              size.height / 2 - 30),
+          Offset(size.width - 120,
+              size.height / 2 - 30),
+          linePaint);
+      // 画当前行的时间
+      dragLineTime = lyric[
+              (_offsetY / (lyricPaints[0].height + 30))
+                      .abs()
+                      .round() -
+                  1]
+          .startTime.inMilliseconds;
+      draggingLineTimeTextPainter = TextPainter(
+        text: const TextSpan(
+            text: '',
+            style: smallGrayTextStyle),
+        textDirection: TextDirection.ltr,
+      );
+      draggingLineTimeTextPainter.layout();
+      draggingLineTimeTextPainter.paint(
+          canvas,
+          Offset(size.width - 80,
+              size.height / 2 - 45));
+    }
+  }
+
+  /// 计算传入行和第一行的偏移量
+  double computeScrollY(int curLine) {
+    return (lyricPaints[0].height + 30) * (curLine + 1);
+  }
+
+  void _layoutTextPainters() {
+    for (var lp in lyricPaints) {
+      lp.layout();
+    }
+
+    // 延迟一下计算总高度
+    Future.delayed(const Duration(milliseconds: 300), () {
+      totalHeight = (lyricPaints[0].height + 120) *
+          (lyricPaints.length - 1);
     });
-
-    // 是否需要滚动(top和bottom到边界时不滚动了)
-    if (topIndex < 0 && _controller.offset <= 0) {
-      return;
-    }
-    if (bottomIndex >= itemSize &&
-        _controller.offset >= (itemSize - visibleItemSize) * itemHeight) {
-      return;
-    }
-
-    if (isFirst) {
-      // 第一次进入时不用滚动。
-      isFirst = false;
-      _controller.jumpTo(topIndex * itemHeight);
-    } else {
-      _controller.animateTo(topIndex * itemHeight,
-          duration: Duration(seconds: 1), curve: Curves.easeInOut);
-    }
   }
 
-  // 根据歌曲播放的位置确定滚动的位置
-  void updatePosition(int milliseconds, {isTaping: false}) {
-    if (isItemsEmpty) {
-      return;
-    }
-
-    if (isScrolling) {
-      lastScrollPosition = milliseconds;
-      return;
-    }
-
-    position = milliseconds;
-
-    // 更新单条歌词进度
-    updateCurrentLyricItem();
-
-    int _index = getIndexByTime(position);
-    //print("update index : $_index, currentIndex: $_currentIndex");
-    if (_index != _currentIndex) {
-      _currentIndex = _index;
-      scrollTo(_currentIndex);
-
-      if (isTaping) {
-        // 如果是手动拖动，就要控制滚动的频率。
-        delayNextScroll();
-      }
-    }
-  }
-
-  /// 在手动拖动时，控制滚动的频率。不然多次动画叠在一起界面卡顿。
-  bool isScrolling = false;
-  int lastScrollPosition = -1;
-  void delayNextScroll() {
-    isScrolling = true;
-    Future.delayed(Duration(milliseconds: 200)).then((re) {
-      isScrolling = false;
-      if (lastScrollPosition != -1) {
-        updatePosition(lastScrollPosition, isTaping: true);
-        lastScrollPosition = -1;
-      }
-    });
-  }
-
-  void updateSong(Map song) {
-    if (song != this.song) {
-      this.song = song;
-      _getLyric();
-    }
+  @override
+  bool shouldRepaint(LyricWidget oldDelegate) {
+    return oldDelegate._offsetY != _offsetY ||
+        oldDelegate.isDragging != isDragging;
   }
 }

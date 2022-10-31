@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:listen_books/page/home_page.dart';
 
 class NavigatorUtil {
   static void push(BuildContext context, Widget page) {
@@ -7,6 +8,10 @@ class NavigatorUtil {
 
   static void pushFade(BuildContext context, Widget page) {
     Navigator.of(context).push(CustomRouteFade(page));
+  }
+
+  static void goHomePage(BuildContext context) {
+    Navigator.of(context).pushReplacement(MaterialPageRoute(builder: ((context) => const HomePage(title: 'Flutter Demo Home Page'))));
   }
 }
 

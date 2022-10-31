@@ -1,89 +1,89 @@
+
 import 'package:flutter/material.dart';
+import 'package:listen_books/page/favorite_page.dart';
 import 'package:listen_books/page/history_page.dart';
-import 'package:listen_books/widget/search_bar.dart';
+import 'package:listen_books/page/index_page.dart';
+import 'package:listen_books/page/mine_page.dart';
+import 'package:listen_books/page/play_page.dart';
+import 'package:listen_books/utils/navigator_util.dart';
 
 class HomePage extends StatefulWidget {
-  final String _title;
+  const HomePage({super.key, required this.title});
 
-  const HomePage(this._title, {super.key});
+  final String title;
 
   @override
-  State<StatefulWidget> createState() => HomePageState();
-
-  add(HistoryPage historyPage) {}
-
+  State<HomePage> createState() => _HomePageState();
 }
 
+class _HomePageState extends State<HomePage> {
+  int _selectedIndex = 0;
+  final List<Widget> _bottomNavPages = []; 
 
-const List<String> types = [
-  "全部",
-  "流行",
-  "华语",
-  "民谣",
-  "摇滚",
-  "清新",
-  "浪漫",
-  "古风",
-  "影视原声",
-  "欧美",
-  "儿童",
-  "电子",
-  "校园",
-  "放松"
-];
-
-class HomePageState extends State<HomePage>
-  with SingleTickerProviderStateMixin, AutomaticKeepAliveClientMixin  {
-  late TabController _tabController;
-
-  @override
-  bool get wantKeepAlive => true;
+  void _onItemTapped(int index) {
+    setState(() {
+      _selectedIndex = index;
+    });
+  }
 
   @override
   void initState() {
     super.initState();
-    //初始化controller并添加监听
-    _tabController = TabController(length: types.length, vsync: this);
-    _tabController.addListener(() => _onTabChanged());
-  }
 
-   void _onTabChanged() {
-    if (_tabController.index.toDouble() == _tabController.animation?.value) {}
-  }
-
-  TabBar createTabBar()  {
-    return TabBar(
-      controller: _tabController,
-      tabs: types.map((item) {
-        return Tab(
-          height: 44,
-          text: item,
-        );
-      }).toList(),
-      isScrollable: true,
-      indicatorColor: Color.fromARGB(255, 225, 235, 209),
-      indicatorWeight: 3,
-      indicatorPadding: EdgeInsets.only(right: 0),
+    _bottomNavPages
+      ..add(const IndexPage('音乐'))
+      ..add(const HistoryPage('听书'))
+      ..add(const FavoritePage('收藏'))
+      ..add(const MinePage('我的')
     );
   }
 
   @override
   Widget build(BuildContext context) {
-    return DefaultTabController(
-        length: 6,
-        child: Scaffold(
-          appBar: AppBar(
-            bottom: createTabBar(),
-            title: const SearchBarWidget(''),
-          ),
-          body: TabBarView(
-            controller: _tabController,
-            children: types.map((item) {
-              return Center(child: Text("${item}"));
-            }).toList(),
-          ),
-        )
+    return Scaffold(
+      body: _bottomNavPages[_selectedIndex],
+      bottomNavigationBar: BottomAppBar(
+        color: Colors.teal,
+        shape: const CircularNotchedRectangle(),
+        child: Row(
+          mainAxisAlignment: MainAxisAlignment.spaceAround,
+          children: <Widget>[
+            IconButton(
+              icon: const Icon(
+                Icons.music_video,
+                color: Colors.white,
+              ),
+              onPressed:() => _onItemTapped(0),
+            ),
+            IconButton(
+              icon: const Icon(
+                Icons.play_lesson,
+                color: Colors.white,
+              ),
+              onPressed:() => _onItemTapped(1),
+            ),
+            const SizedBox(),
+            IconButton(
+              icon: const Icon(
+                Icons.favorite,
+                color: Colors.white,
+              ),
+              onPressed:() => _onItemTapped(2),
+            ),IconButton(
+              icon: const Icon(
+                Icons.account_circle,
+                color: Colors.white,
+              ),
+              onPressed:() => _onItemTapped(3),
+            ),
+          ],          
+        ),
+      ),
+      floatingActionButton: FloatingActionButton(
+        onPressed:() {NavigatorUtil.push(context, const PlayPage('_title'));},
+        child: const Icon(Icons.play_arrow),
+      ),
+      floatingActionButtonLocation: FloatingActionButtonLocation.centerDocked,
     );
   }
 }
-

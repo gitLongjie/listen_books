@@ -1,5 +1,4 @@
 import 'dart:async';
-import 'package:audioplayer/audioplayer.dart';
 import 'package:flutter/foundation.dart';
 
 import 'package:listen_books/model/media_list.dart';
@@ -24,7 +23,7 @@ class MusicListener {
 }
 
 class MusicController with ChangeNotifier {
-  late AudioPlayer audioPlayer;
+  // late AudioPlayer audioPlayer;
   late PlayList playList;
 
   PlayerState playerState = PlayerState.loading;
@@ -38,9 +37,9 @@ class MusicController with ChangeNotifier {
   List<MusicListener> musicListeners = [];
 
   MusicController() {
-    if (audioPlayer == null) {
-      init();
-    }
+    // if (audioPlayer == null) {
+    //   init();
+    // }
   }
 
   void addMusicListener(MusicListener listener) {
@@ -60,51 +59,51 @@ class MusicController with ChangeNotifier {
     musicListeners.forEach((listener) => event(listener));
   }
 
-  void init() {
-    audioPlayer = AudioPlayer();
-    playList = PlayList();
+  // void init() {
+  //   // audioPlayer = AudioPlayer();
+  //   playList = PlayList();
 
-    _positionSubscription = audioPlayer.onAudioPositionChanged.listen((p) {
-      position = p.inMilliseconds;
-      notifyMusicListeners((listener) => listener.onPosition(position));
-    });
-    _audioPlayerStateSubscription =
-        audioPlayer.onPlayerStateChanged.listen((event) {
-      print(
-          "AudioPlayer onPlayerStateChanged, last state: $playerState, currentState: $event");
+  //   _positionSubscription = audioPlayer.onAudioPositionChanged.listen((p) {
+  //     position = p.inMilliseconds;
+  //     notifyMusicListeners((listener) => listener.onPosition(position));
+  //   });
+  //   _audioPlayerStateSubscription =
+  //       audioPlayer.onPlayerStateChanged.listen((event) {
+  //     print(
+  //         "AudioPlayer onPlayerStateChanged, last state: $playerState, currentState: $event");
 
-      if (event == AudioPlayerState.PLAYING) {
-        playerState = PlayerState.playing;
-        //if (duration == 0) {
-        duration = audioPlayer.duration.inMilliseconds;
-        notifyMusicListeners((listener) => listener.onStart(duration));
-        print("AudioPlayer start, duration:$duration");
-        //}
-      } else if (event == AudioPlayerState.PAUSED) {
-        playerState = PlayerState.paused;
-      } else if (event == AudioPlayerState.STOPPED) {
-        position = 0;
-        playerState = PlayerState.stopped;
-      } else if (event == AudioPlayerState.COMPLETED) {
-        position = 0;
-        playerState = PlayerState.completed;
-        print('播放结束');
-        onComplete();
-      }
-      notifyMusicListeners((listener) => listener.onStateChanged(playerState));
-      print("AudioPlayer onPlayerStateChanged: $playerState");
-    }, onError: (msg) {
-      notifyMusicListeners((listener) => listener.onError(msg));
-      print("AudioPlayer onError: $msg");
-    });
-  }
+  //     if (event == AudioPlayerState.PLAYING) {
+  //       playerState = PlayerState.playing;
+  //       //if (duration == 0) {
+  //       duration = audioPlayer.duration.inMilliseconds;
+  //       notifyMusicListeners((listener) => listener.onStart(duration));
+  //       print("AudioPlayer start, duration:$duration");
+  //       //}
+  //     } else if (event == AudioPlayerState.PAUSED) {
+  //       playerState = PlayerState.paused;
+  //     } else if (event == AudioPlayerState.STOPPED) {
+  //       position = 0;
+  //       playerState = PlayerState.stopped;
+  //     } else if (event == AudioPlayerState.COMPLETED) {
+  //       position = 0;
+  //       playerState = PlayerState.completed;
+  //       print('播放结束');
+  //       onComplete();
+  //     }
+  //     notifyMusicListeners((listener) => listener.onStateChanged(playerState));
+  //     print("AudioPlayer onPlayerStateChanged: $playerState");
+  //   }, onError: (msg) {
+  //     notifyMusicListeners((listener) => listener.onError(msg));
+  //     print("AudioPlayer onError: $msg");
+  //   });
+  // }
 
   void dispose() {
     super.dispose();
     _positionSubscription.cancel();
     _audioPlayerStateSubscription.cancel();
     musicListeners.clear();
-    audioPlayer?.stop();
+    // audioPlayer?.stop();
   }
 
   void setPlayList(List list, int currentIndex) {
@@ -151,7 +150,7 @@ class MusicController with ChangeNotifier {
     if (!isContinue) {
       this.url = path;
       if (playerState != PlayerState.loading) {
-        await audioPlayer.stop(); // 注意这儿要用await，不然异步到后面，状态会不对。
+        // await audioPlayer.stop(); // 注意这儿要用await，不然异步到后面，状态会不对。
       }
       // 不是继续播放，就进入加载状态
       duration = 0;
@@ -167,24 +166,24 @@ class MusicController with ChangeNotifier {
     } else {
       bool isLocal = !this.url.startsWith('http');
       print("start play: $url , isLocal: $isLocal, playerState: $playerState ");
-      await audioPlayer.play(this.url, isLocal: isLocal);
+      // await audioPlayer.play(this.url, isLocal: isLocal);
     }
   }
 
   Future pause() async {
     saveHistory();
-    await audioPlayer?.pause();
+    // await audioPlayer?.pause();
   }
 
   Future seek(double millseconds) async {
-    await audioPlayer?.seek(millseconds / 1000);
+    // await audioPlayer?.seek(millseconds / 1000);
     if (playerState == PlayerState.paused) {
       //play();
     }
   }
 
   Future stop() async {
-    await audioPlayer?.stop();
+    // await audioPlayer?.stop();
   }
 
   Future toggle() async {

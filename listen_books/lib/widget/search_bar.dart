@@ -1,9 +1,8 @@
 import 'package:flutter/material.dart';
 
 class SearchBarWidget extends StatefulWidget {
-  final String _label;
 
-  const SearchBarWidget(this._label, {super.key});
+  const SearchBarWidget({super.key});
   
   @override
   State<StatefulWidget> createState() => SearchBarWidgetState();
