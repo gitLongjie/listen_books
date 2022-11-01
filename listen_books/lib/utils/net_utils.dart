@@ -8,6 +8,7 @@ import 'package:dio/dio.dart';
 // import 'package:dio_cookie_manager/dio_cookie_manager.dart';
 import 'package:flutter/material.dart';
 import 'package:listen_books/model/lyric.dart';
+import 'package:listen_books/model/user.dart';
 import 'package:listen_books/widget/loading.dart';
 import 'package:path_provider/path_provider.dart';
 
@@ -15,7 +16,7 @@ import 'package:path_provider/path_provider.dart';
 
 class NetUtils {
   // static late final Dio _dio;
-  static const String baseUrl = 'http://118.24.63.15';
+  static const String baseUrl = 'http://39.107.224.142:8802';
 
   static void init() async {
     Directory tempDir = await getTemporaryDirectory();
@@ -85,6 +86,38 @@ class NetUtils {
     }
   }
 
+  static Future<Response> _post(
+    BuildContext? context,
+    String url, {
+    data,
+    Map<String, dynamic>? params,
+    bool isShowLoading = true,
+  }) async {
+    if (isShowLoading && null != context) Loading.showLoading(context);
+    try {
+      // Url.parse(context)
+      return await Dio().post(baseUrl + url, data: data, queryParameters: params);
+      // return await _dio.get(url, queryParameters: params);
+    } on DioError catch (e) {
+      if (e == null) {
+        return Future.error(Response(data: -1, requestOptions: RequestOptions(path: '')));
+      } else if (e.response != null) {
+        if (e.response!.statusCode! >= 300 && e.response!.statusCode! < 400) {
+          // _reLogin();
+          return Future.error(Response(data: -1, requestOptions: RequestOptions(path: '')));
+        } else {
+          return Future.value(e.response);
+        }
+      } else {
+        return Future.error(Response(data: -1, requestOptions: RequestOptions(path: '')));
+      }
+    } finally {
+      if (null != context) {
+        Loading.hideLoading(context);
+      }
+    }
+  }
+
   static Future<LyricData> getLyricData(
       BuildContext context, {
       required Map<String, dynamic> params,
@@ -106,4 +139,23 @@ class NetUtils {
     );
   }
 
+  static login(BuildContext? context, String name, String pwd) async {
+    Map<String,dynamic> map = {};
+    map['username']=name;
+    map['password']=pwd;
+    var response = await _post(context, '/api/v1/auth/login', data: map, isShowLoading: false);
+
+    return User.fromJson(response.data);
+  }
+
+  /// 每日推荐歌曲
+  static Future<DailySongsData> getDailySongsData(BuildContext context) async {
+    Map<String,dynamic> map = {};
+    map['playlistname']="day_30";
+    var response = await _post(
+      context,
+      '/api/v1/playlist/load',
+    );
+    return DailySongsData.fromJson(response.data);
+  }
 }

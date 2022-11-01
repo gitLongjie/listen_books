@@ -45,6 +45,7 @@ class _SplashPageState extends State<SplashPage> with TickerProviderStateMixin {
 
   void goPage() async{
     await Context.initSp();
+    await Context.initUser();
     // ignore: use_build_context_synchronously
     NavigatorUtil.goHomePage(context);
     // Navigator.push(

@@ -1,5 +1,6 @@
 
 import 'package:flutter/material.dart';
+import 'package:listen_books/utils/net_utils.dart';
 // import 'package:get_it/get_it.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
@@ -19,6 +20,13 @@ class Context{
 
   static setupLocator(){
     // getIt.registerSingleton(NavigateService());
+  }
+
+  static initUser() async {
+    String? userJson = Context.sp.getString("user");
+    if (userJson == null) {
+      NetUtils.login(null, 'gust', 'gust');
+    }
   }
 
 }

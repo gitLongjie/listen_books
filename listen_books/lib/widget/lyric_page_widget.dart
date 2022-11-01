@@ -81,9 +81,9 @@ class _LyricPageState extends State<LyricPage> with TickerProviderStateMixin {
           if (e.localPosition.dx > 0 &&
               e.localPosition.dx < 100 &&
               e.localPosition.dy >
-                  _lyricWidget.canvasSize.height / 2 - 100 &&
+                  _lyricWidget.canvasSize.height / 2 - 10 &&
               e.localPosition.dy <
-                  _lyricWidget.canvasSize.height / 2 + 100) {
+                  _lyricWidget.canvasSize.height / 2 + 10) {
             widget.model.seekPlay(_lyricWidget.dragLineTime);
           }
         } : null,
@@ -117,7 +117,7 @@ class _LyricPageState extends State<LyricPage> with TickerProviderStateMixin {
                   Context.screenWidth,
                   Context.screenHeight -
                     kToolbarHeight - 150 - 50 -
-                    Context.statusBarHeight - 120
+                    Context.statusBarHeight
                   ),
                 painter: _lyricWidget,
               );

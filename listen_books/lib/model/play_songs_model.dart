@@ -4,7 +4,10 @@ import 'dart:convert';
 import 'package:audioplayers/audioplayers.dart';
 // import 'package:common_utils/common_utils.dart';
 import 'package:flutter/material.dart';
+import 'package:listen_books/context.dart';
 import 'package:listen_books/model/song.dart';
+import 'package:listen_books/model/user.dart';
+import 'package:provider/provider.dart';
 
 
 class PlaySongsModel with ChangeNotifier{
@@ -70,7 +73,15 @@ class PlaySongsModel with ChangeNotifier{
   void play() async {
     // var songId = _songs[curIndex].id;
     // var url = await NetUtils.getMusicURL(null, songId);
-    var url = "https://ws.stream.qqmusic.qq.com/C400000XLtiO1pYlSu.m4a?guid=100231&vkey=0948A90522E247D9684C7F398DAF684158C46AA966C7E264E15EF547BE3FA0F8909CAFBD9D5C1CB24FD22718189703EA588FCA6D4580D5E9&uin=626567678&fromtag=103032";
+    // Provider.of<UserModel>(context, listen: false);
+    String? userJson = Context.sp.getString('user');
+    if (userJson == null) {
+      return;
+    }
+
+    User user = User.fromJson(json.decode(userJson));
+    String url = "http://39.107.224.142:8802/media/music/Beyond/BEYOND%E3%80%90%E6%B5%B7%E9%97%8A%E5%A4%A9%E7%A9%BA%E3%80%91Music%20Video.mp3?token=";
+    url += user.token!; 
     Source source = UrlSource(url);
     _audioPlayer.play(source);
     saveCurSong();

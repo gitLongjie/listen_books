@@ -1,4 +1,7 @@
 import 'package:flutter/material.dart';
+import 'package:listen_books/model/user.dart';
+import 'package:listen_books/utils/net_utils.dart';
+import 'package:provider/provider.dart';
 
 class MinePage extends StatefulWidget {
   final String _title;
@@ -6,12 +9,20 @@ class MinePage extends StatefulWidget {
   const MinePage(this._title, {super.key});
 
   @override
-  State<StatefulWidget> createState() => MinePageState();
+  State<StatefulWidget> createState() => _MinePageState();
 
 }
 
-class MinePageState extends State<MinePage> {
+class _MinePageState extends State<MinePage> {
   
+  @override
+  void initState() {
+    super.initState();
+
+     Provider.of<UserModel>(context, listen: false).login(context, 'gust', 'gust');
+    // NetUtils.getLyricData(context, params: params)
+  }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(

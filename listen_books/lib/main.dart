@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:listen_books/context.dart';
 import 'package:listen_books/model/play_songs_model.dart';
+import 'package:listen_books/model/user.dart';
 import 'package:listen_books/page/home_page.dart';
 import 'package:listen_books/page/splash_page.dart';
 import 'package:provider/provider.dart';
@@ -14,9 +15,9 @@ void main() {
   Provider.debugCheckInvalidValueType = null;
   runApp(MultiProvider(
     providers: [
-      // ChangeNotifierProvider<UserModel>(
-      //   create: (_) => UserModel(),
-      // ),
+      ChangeNotifierProvider<UserModel>(
+        create: (_) => UserModel(),
+      ),
       ChangeNotifierProvider<PlaySongsModel>(
         create: (_) => PlaySongsModel()..init(),
       ),

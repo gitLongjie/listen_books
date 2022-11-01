@@ -115,44 +115,44 @@ class _PlayPageState extends State<PlayPage> with TickerProviderStateMixin {
                           child: IndexedStack(
                             index: switchIndex,
                             children: <Widget>[
-                              Stack(
-                                children: <Widget>[
-                                  Align(
-                                    alignment: Alignment.topCenter,
-                                    child: Container(
-                                      margin: const EdgeInsets.only(top: 150),
-                                      child: RotationTransition(
-                                        turns: _controller,
-                                        child: Stack(
-                                          alignment: Alignment.center,
-                                          children: <Widget>[
-                                            Image.asset(
-                                              'assets/bet.png',
-                                              width:550,
-                                            ),
-                                            const RoundImgWidget('assets/bet.png', 370, fit: BoxFit.cover),
-                                          ],
-                                        ),
-                                      ),
-                                    ),
-                                  ),
-                                  Align(
-                                    alignment: const Alignment(0.25, -1),
-                                    child: RotationTransition(
-                                      turns: _stylusAnimation,
-                                      alignment: const Alignment(
-                                        -1 + (45 * 2) /293,
-                                        -1 + (45 * 2) / 504
-                                      ),
-                                      child: Image.asset(
-                                        'assets/bgm.png',
-                                        width: 205,
-                                        height: 352.8,
-                                      ),
-                                    ),
-                                  ),
-                                ],
-                              ),
+                              // Stack(
+                              //   children: <Widget>[
+                              //     Align(
+                              //       alignment: Alignment.topCenter,
+                              //       child: Container(
+                              //         margin: const EdgeInsets.only(top: 150),
+                              //         child: RotationTransition(
+                              //           turns: _controller,
+                              //           child: Stack(
+                              //             alignment: Alignment.center,
+                              //             children: <Widget>[
+                              //               Image.asset(
+                              //                 'assets/bet.png',
+                              //                 width:550,
+                              //               ),
+                              //               const RoundImgWidget('assets/bet.png', 370, fit: BoxFit.cover),
+                              //             ],
+                              //           ),
+                              //         ),
+                              //       ),
+                              //     ),
+                              //     Align(
+                              //       alignment: const Alignment(0.25, -1),
+                              //       child: RotationTransition(
+                              //         turns: _stylusAnimation,
+                              //         alignment: const Alignment(
+                              //           -1 + (45 * 2) /293,
+                              //           -1 + (45 * 2) / 504
+                              //         ),
+                              //         child: Image.asset(
+                              //           'assets/bgm.png',
+                              //           width: 205,
+                              //           height: 352.8,
+                              //         ),
+                              //       ),
+                              //     ),
+                              //   ],
+                              // ),
                               LyricPage(model),
                             ],
                           ),
