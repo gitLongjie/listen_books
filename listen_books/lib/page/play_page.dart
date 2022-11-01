@@ -10,6 +10,7 @@ import 'package:listen_books/widget/lyric_page_widget.dart';
 import 'package:listen_books/widget/play_page_title_widget.dart';
 import 'package:listen_books/widget/v_empty_view.dart';
 import 'package:listen_books/widget/widget_play_bottom_menu.dart';
+import 'package:listen_books/widget/widget_round_img.dart';
 import 'package:listen_books/widget/widget_song_progress.dart';
 import 'package:provider/provider.dart';
 
@@ -22,13 +23,30 @@ class PlayPage extends StatefulWidget {
 
 }
 
-class _PlayPageState extends State<PlayPage> {
+class _PlayPageState extends State<PlayPage> with TickerProviderStateMixin {
+  late AnimationController _controller; // 封面旋转控制器
+  late AnimationController _stylusController; //唱针控制器
+  late Animation<double> _stylusAnimation;
   int switchIndex = 0; //用于切换歌词
 
   @override
   void initState() {
     // TODO: implement setState
     super.initState();
+
+     _controller =
+        AnimationController(vsync: this, duration: const Duration(seconds: 20));
+    _stylusController =
+        AnimationController(vsync: this, duration: const Duration(milliseconds: 400));
+    _stylusAnimation =
+        Tween<double>(begin: -0.03, end: -0.10).animate(_stylusController);
+    _controller.addStatusListener((status) {
+      // 转完一圈之后继续
+      if (status == AnimationStatus.completed) {
+        _controller.reset();
+        _controller.forward();
+      }
+    });
 
     Provider.of<PlaySongsModel>(context, listen: false).playSong(Song(0));
   }
@@ -97,12 +115,49 @@ class _PlayPageState extends State<PlayPage> {
                           child: IndexedStack(
                             index: switchIndex,
                             children: <Widget>[
+                              Stack(
+                                children: <Widget>[
+                                  Align(
+                                    alignment: Alignment.topCenter,
+                                    child: Container(
+                                      margin: const EdgeInsets.only(top: 150),
+                                      child: RotationTransition(
+                                        turns: _controller,
+                                        child: Stack(
+                                          alignment: Alignment.center,
+                                          children: <Widget>[
+                                            Image.asset(
+                                              'assets/bet.png',
+                                              width:550,
+                                            ),
+                                            const RoundImgWidget('assets/bet.png', 370, fit: BoxFit.cover),
+                                          ],
+                                        ),
+                                      ),
+                                    ),
+                                  ),
+                                  Align(
+                                    alignment: const Alignment(0.25, -1),
+                                    child: RotationTransition(
+                                      turns: _stylusAnimation,
+                                      alignment: const Alignment(
+                                        -1 + (45 * 2) /293,
+                                        -1 + (45 * 2) / 504
+                                      ),
+                                      child: Image.asset(
+                                        'assets/bgm.png',
+                                        width: 205,
+                                        height: 352.8,
+                                      ),
+                                    ),
+                                  ),
+                                ],
+                              ),
                               LyricPage(model),
                             ],
                           ),
                         ),
                       ),
-
                       buildSongsHandle(model),
                       Padding(
                         padding:

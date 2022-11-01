@@ -28,7 +28,7 @@ class _LyricPageState extends State<LyricPage> with TickerProviderStateMixin {
   AnimationController? _lyricOffsetYController;
   int curSongId = -1;
   Timer? dragEndTimer; // 拖动结束任务
-  late Function dragEndFunc;
+  late Function() dragEndFunc;
   Duration dragEndDuration = const Duration(milliseconds: 1000);
 
   @override
@@ -137,7 +137,7 @@ class _LyricPageState extends State<LyricPage> with TickerProviderStateMixin {
         dragEndTimer = null;
       }
     }
-    // dragEndTimer = Timer(dragEndDuration, dragEndFunc);
+    dragEndTimer = Timer(dragEndDuration, dragEndFunc);
   }
 
   /// 开始下一行动画

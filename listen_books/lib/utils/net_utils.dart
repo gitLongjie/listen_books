@@ -94,6 +94,16 @@ class NetUtils {
     var testData = '{"sgc":true,"sfy":true,"qfy":true,"transUser": {"id":1,"status":1,"demand":0,"userid":111,"nickname": "Beyond","uptime":0},"lyricUser": {"id":1,"status":1,"demand":0,"userid":111,"nickname": "Beyond","uptime":0},"lrc":{"version":1,"lyric":"\\n[ti:海阔天空]\\n[ar:beyond]\\n[al:]\\n[by:]\\n[offset:500]\\n[00:18.84]今天我\\n[00:21.85]寒夜里看雪飘过\\n[00:25.47]怀著冷却了的心窝飘远方\\n[00:31.36]风雨里追赶\\n[00:34.69]雾里分不清影踪\\n[00:37.56]天空海阔你与我\\n[00:40.37]可会变(谁没在变)\\n[00:44.00]多少次迎著冷眼与嘲笑\\n[00:51.10]从没有放弃过心中的理想\\n[00:56.19]一刹那恍惚若有所失的感觉\\n[01:02.23]不知不觉已变淡心里爱(谁明白我)\\n[01:09.24]原谅我这一生不羁放纵爱自由\\n[01:16.16]也会怕有一天会跌倒\\n[01:22.45]背弃了理想谁人都可以\\n[01:28.66]那会怕有一天只你共我\\n[01:43.17]今天我\\n[01:46.70]寒夜里看雪飘过\\n[01:49.65]怀著冷却了的心窝飘远方\\n[01:55.64]风雨里追赶\\n[01:58.74]雾里分不清影踪\\n[02:01.79]天空海阔你与我\\n[02:04.66]可会变(谁没在变)\\n[02:08.60]原谅我这一生不羁放纵爱自由\\n[02:14.69]也会怕有一天会跌倒\\n[02:21.85]背弃了理想谁人都可以\\n[02:28.03]那会怕有一天只你共我\\n[03:08.35]仍然自由自我永远高唱我歌\\n[03:17.88]走遍千里\\n[03:20.60]原谅我这一生不羁放纵爱自由\\n[03:27.32]也会怕有一天会跌倒\\n[03:33.87]背弃了理想谁人都可以\\n[03:40.12]那会怕有一天只你共我\\n[03:46.13]背弃了理想谁人都可以\\n[03:52.18]那会怕有一天只你共我\\n[03:56.95]ohyeah\\n[04:03.11]ohyeah\\n[04:07.98]oh......\\n[04:15.67]oh......"},"klyric":{"version":1,"lyric":""},"tlyric":{"version":1,"lyric":""},"code":0}';
     var jsonDat = jsonDecode(testData);
     return LyricData.fromJson(jsonDat);
-  } 
+  }
+
+  static Widget showNetImage(String url,
+      {double? width, double? height, BoxFit? fit}) {
+    return Image(
+      image: NetworkImage(url),
+      width: width,
+      height: height,
+      fit: fit,
+    );
+  }
 
 }

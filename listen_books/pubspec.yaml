@@ -78,6 +78,9 @@ flutter:
     - assets/10a2d91f65223a83d6a44b038657f6ba.jpg
     - assets/icon_logo.png
     - assets/icon_song_comment.png
+    - assets/bet.png
+    - assets/beyond.jpg
+    - assets/bgm.png
 
   # An image asset can refer to one or more resolution-specific "variants", see
   # https://flutter.dev/assets-and-images/#resolution-aware
