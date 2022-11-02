@@ -7,22 +7,30 @@ import 'dart:io';
 import 'package:dio/dio.dart';
 // import 'package:dio_cookie_manager/dio_cookie_manager.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_secure_storage/flutter_secure_storage.dart';
 import 'package:listen_books/context.dart';
 import 'package:listen_books/model/daily_songs.dart';
 import 'package:listen_books/model/lyric.dart';
 import 'package:listen_books/model/user.dart';
+import 'package:listen_books/utils/dio_util.dart';
 import 'package:listen_books/widget/loading.dart';
 import 'package:path_provider/path_provider.dart';
 
 // import 'package:http/http.dart' as http;
 
 class NetUtils {
-  // static late final Dio _dio;
+  static late final DioUtil _api ;
   static const String baseUrl = 'http://39.107.224.142:8802';
 
   static void init() async {
     Directory tempDir = await getTemporaryDirectory();
     String tempPath = tempDir.path;
+    _api = DioUtil();
+    String? userJson = Context.sp.getString("user");
+    if (null != userJson) {
+      User user = User.fromJson(json.decode(userJson));
+      _api.accessToken = user.token ?? _api.accessToken;
+    }
     // CookieJar cj = PersistCookieJar();
     // _dio = Dio(BaseOptions(baseUrl: '$baseUrl:1020', followRedirects: false))
       // ..interceptors.add(CookieManager(cj))
@@ -99,7 +107,7 @@ class NetUtils {
     if (isShowLoading && null != context) Loading.showLoading(context);
     try {
       // Url.parse(context)
-      return await Dio().post(baseUrl + url, data: data, queryParameters: params, options: options);
+      return await _api.api.post(baseUrl + url, data: data, queryParameters: params);
       // return await _dio.get(url, queryParameters: params);
     } on DioError catch (e) {
       if (e == null) {
@@ -135,7 +143,7 @@ class NetUtils {
   static Widget showNetImage(String url,
       {double? width, double? height, BoxFit? fit}) {
     return Image(
-      image: NetworkImage(url),
+      image: NetworkImage("$url&token=${_api.accessToken}", scale: width ?? 200),
       width: width,
       height: height,
       fit: fit,
@@ -167,9 +175,15 @@ class NetUtils {
       data: map,
       options: Options(headers: {
         "Content-Type": "application/json",
-        "Authorization": "Bearer $token",
+            "Authorization":
+                "Bearer $token",
       })
     );
+    print(response.data);
+    print(response.statusCode);
+    if (response.statusCode! >= 400) {
+      return DailySongsData(songs: []);
+    }
     return DailySongsData.fromJson(response.data);
   }
 }

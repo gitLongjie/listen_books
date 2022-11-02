@@ -85,11 +85,16 @@ class _CustomFutureBuilderState<T> extends State<CustomFutureBuilder<T>> {
           case ConnectionState.active:
             return widget.loadingWidget??Container();
           case ConnectionState.done:
-            return NetErrorWidget(
-              callback: () {
-                _request();
-              },
-          );
+            if (snapshot.hasData) {
+              return widget.builder(context, snapshot.data as T);
+            } else if (snapshot.hasError) {
+              return NetErrorWidget(
+                callback: () {
+                  _request();
+                },
+              );
+            }
+          return Container();
         }
       },
     );

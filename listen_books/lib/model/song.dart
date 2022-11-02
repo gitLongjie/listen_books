@@ -1,4 +1,6 @@
 
+import 'package:listen_books/utils/net_utils.dart';
+
 class MetaData {
   String _artist = '';
   String _hash = '';
@@ -37,16 +39,21 @@ class MetaData {
   set album_art(String album_art) => _album_art = album;
 
   MetaData.fromJson(Map<String, dynamic> json) {
-    _artist = json['artist'];
-    _hash = json['hash'];
-    _album = json['album'];
-    _track = json['track'];
-    _title = json['title'];
-    _album_art = json['album-art'];
+    _artist = json['artist'] ?? "未知";
+    _hash = json['hash'] ?? "";
+    _album = json['album'] ?? "未知";
+    _track = json['track'] ?? -1;
+    _title = json['title'] ?? "未知";
+    _album_art = json['album-art'] ?? "未知";
+    if (_album_art == "未知") {
+      _album_art = "${NetUtils.baseUrl}/assets/img/default.png";
+    } else {
+      _album_art = "${NetUtils.baseUrl}/album-art/$_album_art";
+    }
   }
 
   Map<String, dynamic> toJson() {
-    final Map<String, dynamic> data = new Map<String, dynamic>();
+    final Map<String, dynamic> data = {};
     data['artist'] = _artist;
     data['hash'] = _hash;
     data['album'] = _album;

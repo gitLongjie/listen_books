@@ -46,6 +46,7 @@ class _SplashPageState extends State<SplashPage> with TickerProviderStateMixin {
   void goPage() async{
     await Context.initSp();
     await Context.initUser();
+    NetUtils.init();
     // ignore: use_build_context_synchronously
     NavigatorUtil.goHomePage(context);
     // Navigator.push(
@@ -75,8 +76,7 @@ class _SplashPageState extends State<SplashPage> with TickerProviderStateMixin {
 
   @override
   Widget build(BuildContext context) {
-    NetUtils.init();
-     ScreenUtils.init(750, 1334);
+    ScreenUtils.init(750, 1334);
     final size = MediaQuery.of(context).size;
     Context.screenWidth = size.width;
     Context.screenHeight = size.height;

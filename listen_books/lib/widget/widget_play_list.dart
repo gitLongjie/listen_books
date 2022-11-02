@@ -14,7 +14,7 @@ class PlayListWidget extends StatelessWidget {
   final VoidCallback? onTap;
   final int? index;
 
-  PlayListWidget({
+  const PlayListWidget({super.key, 
     this.picUrl,
     @required this.text,
     this.playCount,

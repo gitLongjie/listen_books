@@ -22,7 +22,7 @@ class PlayListCoverWidget extends StatelessWidget {
         child: Stack(
           alignment: Alignment.topRight,
           children: <Widget>[
-            NetUtils.showNetImage('$url?param=200y200', width: width, height:height ?? width, fit: BoxFit.cover),
+            NetUtils.showNetImage('$url?param=200y200&compress=l', width: width, height:height ?? width, fit: BoxFit.cover),
             playCount == null
                 ? Container()
                 : Padding(
@@ -33,7 +33,7 @@ class PlayListCoverWidget extends StatelessWidget {
                       mainAxisSize: MainAxisSize.min,
                       children: <Widget>[
                         Image.asset(
-                          'images/icon_triangle.png',
+                          'assets/icon_triangle.png',
                           width: 30,
                           height: 30,
                         ),

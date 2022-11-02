@@ -48,7 +48,7 @@ class _PlayPageState extends State<PlayPage> with TickerProviderStateMixin {
       }
     });
 
-    Provider.of<PlaySongsModel>(context, listen: false).playSong(Song(0));
+    // Provider.of<PlaySongsModel>(context, listen: false).playSong(Song(0));
   }
   
   @override
