@@ -1,94 +1,30 @@
+import 'package:listen_books/model/song.dart';
+
 class DailySongsData {
-  num _code;
-  List<MetaData> _metaDatas;
+  List<Song> _songs = [];
 
-  DailySongsData({List<MetaData> metaDates}) {
-    this._code = code;
-    this._recommend = recommend;
+  DailySongsData({List<Song>? songs}) {
+    _songs = songs ?? [];
   }
 
-  num get code => _code;
-  set code(num code) => _code = code;
-  List<Recommend> get recommend => _recommend;
-  set recommend(List<Recommend> recommend) => _recommend = recommend;
+  List<Song>? get songs => _songs;
+  set recommend(List<Song> songs) => _songs = songs;
 
-  DailySongsData.fromJson(Map<String, dynamic> json) {
-    _code = json['code'];
-    if (json['recommend'] != null) {
-      _recommend = new List<Recommend>();
-      json['recommend'].forEach((v) {
-        _recommend.add(new Recommend.fromJson(v));
-      });
+  DailySongsData.fromJson(List<dynamic>? json) {
+    if (json != null) {
+      for (var v in json) {
+        _songs.add(Song.fromJson(v));
+      }
     }
   }
 
-  Map<String, dynamic> toJson() {
-    final Map<String, dynamic> data = new Map<String, dynamic>();
-    data['code'] = this._code;
-    if (this._recommend != null) {
-      data['recommend'] = this._recommend.map((v) => v.toJson()).toList();
-    }
+  List<dynamic> toJson() {
+    final List<dynamic> data = _songs.toList();
     return data;
   }
 }
+/*
 
-class MetaData {
-  String _artist = '';
-  String _hash = '';
-  String _album = '';
-  num _track = 0;
-  String _title = '';
-  String _album_art = '';
-
-  MetaData({
-    String? artist,
-    String? hash,
-    String? album,
-    num? track,
-    String? title,
-    String? album_art
-  }) {
-    _artist = artist ?? '';
-    _hash = hash ?? '';
-    _album = album ?? '';
-    _track = track ?? 0;
-    _title = title ?? 'Unkown';
-    _album_art = album_art ??  '';
-  }
-
-  String get artist => _artist;
-  set artist(String artist) => _artist = artist;
-  String get hash => _hash;
-  set hash(String hash) => _hash = hash;
-  String get album => _album;
-  set album(String album) => _album = album;
-  num get track => _track;
-  set track(num track) => _track = track;
-  String get title => _title;
-  set title(String title) => _title = title;
-  String get album_art => _album_art;
-  set album_art(String album_art) => _album_art = album;
-
-  MetaData.fromJson(Map<String, dynamic> json) {
-    _artist = json['artist'];
-    _hash = json['hash'];
-    _album = json['album'];
-    _track = json['track'];
-    _title = json['title'];
-    _album_art = json['album-art'];
-  }
-
-  Map<String, dynamic> toJson() {
-    final Map<String, dynamic> data = new Map<String, dynamic>();
-    data['artist'] = _artist;
-    data['hash'] = _hash;
-    data['album'] = _album;
-    data['track'] = _track;
-    data['title'] = _title;
-    data['album-art'] = _album_art;
-    return data;
-  }
-}
 
 class Artists {
   String _name;
@@ -553,3 +489,4 @@ class Privilege {
     return data;
   }
 }
+*/

@@ -81,6 +81,9 @@ flutter:
     - assets/bet.png
     - assets/beyond.jpg
     - assets/bgm.png
+    - assets/icon_daily.png
+    - assets/icon_playlist.png
+    - assets/icon_rank.png
 
   # An image asset can refer to one or more resolution-specific "variants", see
   # https://flutter.dev/assets-and-images/#resolution-aware

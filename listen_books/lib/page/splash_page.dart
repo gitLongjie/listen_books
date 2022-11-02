@@ -84,7 +84,7 @@ class _SplashPageState extends State<SplashPage> with TickerProviderStateMixin {
     Context.bottomBarHeight = MediaQuery.of(context).padding.bottom;
     return Scaffold(
       backgroundColor: Colors.white,
-      body: Container(
+      body: SizedBox(
         height: double.infinity,
         width: double.infinity,
         child: ScaleTransition(

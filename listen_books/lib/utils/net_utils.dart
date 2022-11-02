@@ -7,6 +7,8 @@ import 'dart:io';
 import 'package:dio/dio.dart';
 // import 'package:dio_cookie_manager/dio_cookie_manager.dart';
 import 'package:flutter/material.dart';
+import 'package:listen_books/context.dart';
+import 'package:listen_books/model/daily_songs.dart';
 import 'package:listen_books/model/lyric.dart';
 import 'package:listen_books/model/user.dart';
 import 'package:listen_books/widget/loading.dart';
@@ -91,12 +93,13 @@ class NetUtils {
     String url, {
     data,
     Map<String, dynamic>? params,
+    Options? options,
     bool isShowLoading = true,
   }) async {
     if (isShowLoading && null != context) Loading.showLoading(context);
     try {
       // Url.parse(context)
-      return await Dio().post(baseUrl + url, data: data, queryParameters: params);
+      return await Dio().post(baseUrl + url, data: data, queryParameters: params, options: options);
       // return await _dio.get(url, queryParameters: params);
     } on DioError catch (e) {
       if (e == null) {
@@ -150,11 +153,22 @@ class NetUtils {
 
   /// 每日推荐歌曲
   static Future<DailySongsData> getDailySongsData(BuildContext context) async {
+    String? s = Context.sp.getString('user');
+    if (s == null) {
+      return DailySongsData(songs: []);
+    }
+    User user = User.fromJson(json.decode(s));
     Map<String,dynamic> map = {};
     map['playlistname']="day_30";
+    String? token = user.token;
     var response = await _post(
       context,
       '/api/v1/playlist/load',
+      data: map,
+      options: Options(headers: {
+        "Content-Type": "application/json",
+        "Authorization": "Bearer $token",
+      })
     );
     return DailySongsData.fromJson(response.data);
   }

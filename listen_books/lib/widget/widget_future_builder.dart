@@ -13,17 +13,17 @@ class CustomFutureBuilder<T> extends StatefulWidget {
   final ValueWidgetBuilder<T> builder;
   final Function futureFunc;
   final Map<String, dynamic>? params;
-  final Widget loadingWidget;
+  final Widget? loadingWidget;
 
-  CustomFutureBuilder({
+  const CustomFutureBuilder({super.key, 
     required this.futureFunc,
     required this.builder,
     this.params,
-    required Widget loadingWidget,
-  }) : loadingWidget = loadingWidget;
+    this.loadingWidget,
+  });
 
   @override
-  _CustomFutureBuilderState<T> createState() => _CustomFutureBuilderState<T>();
+  State<StatefulWidget> createState() => _CustomFutureBuilderState<T>();
 }
 
 class _CustomFutureBuilderState<T> extends State<CustomFutureBuilder<T>> {
@@ -76,24 +76,22 @@ class _CustomFutureBuilderState<T> extends State<CustomFutureBuilder<T>> {
 
   @override
   Widget build(BuildContext context) {
-    return _future == null
-        ? widget.loadingWidget
-        : FutureBuilder(
-            future: _future,
-            builder: (context, snapshot) {
-              switch (snapshot.connectionState) {
-                case ConnectionState.none:
-                case ConnectionState.waiting:
-                case ConnectionState.active:
-                  return widget.loadingWidget;
-                case ConnectionState.done:
-                  return NetErrorWidget(
-                    callback: () {
-                      _request();
-                    },
-                );
-              }
-            },
+    return _future == null ? widget.loadingWidget?? Container() : FutureBuilder(
+      future: _future,
+      builder: (context, snapshot) {
+        switch (snapshot.connectionState) {
+          case ConnectionState.none:
+          case ConnectionState.waiting:
+          case ConnectionState.active:
+            return widget.loadingWidget??Container();
+          case ConnectionState.done:
+            return NetErrorWidget(
+              callback: () {
+                _request();
+              },
           );
+        }
+      },
+    );
   }
 }
