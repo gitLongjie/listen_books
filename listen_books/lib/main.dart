@@ -1,15 +1,16 @@
+import 'package:fluro/fluro.dart';
 import 'package:flutter/material.dart';
 import 'package:listen_books/context.dart';
 import 'package:listen_books/model/play_songs_model.dart';
 import 'package:listen_books/model/user.dart';
-import 'package:listen_books/page/home_page.dart';
 import 'package:listen_books/page/splash_page.dart';
+import 'package:listen_books/rout/routs.dart';
 import 'package:provider/provider.dart';
 
 void main() {
-  // Router router = Router();
-  // Routes.configureRoutes(router);
-  // Context.router = router;
+  FluroRouter router = FluroRouter();
+  Routs.configureRoutes(router);
+  Context.router = router;
   Context.setupLocator();
   
   Provider.debugCheckInvalidValueType = null;

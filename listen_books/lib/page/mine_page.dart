@@ -1,6 +1,5 @@
 import 'package:flutter/material.dart';
 import 'package:listen_books/model/user.dart';
-import 'package:listen_books/utils/net_utils.dart';
 import 'package:provider/provider.dart';
 
 class MinePage extends StatefulWidget {

@@ -1,7 +1,24 @@
+import 'package:fluro/fluro.dart';
 import 'package:flutter/material.dart';
+import 'package:listen_books/context.dart';
 import 'package:listen_books/page/home_page.dart';
+import 'package:listen_books/rout/routs.dart';
 
 class NavigatorUtil {
+  static _navigateTo(BuildContext context, String path,
+      {bool replace = false,
+      bool clearStack = false,
+      Duration transitionDuration = const Duration(milliseconds: 250),
+      RouteTransitionsBuilder? transitionBuilder}
+  ) {
+    Context.router.navigateTo(context, path,
+      replace: replace,
+      clearStack: clearStack,
+      transitionDuration: transitionDuration,
+      transitionBuilder: transitionBuilder,
+      transition: TransitionType.material);
+  }
+
   static void push(BuildContext context, Widget page) {
     Navigator.of(context).push(MaterialPageRoute(builder: (context) => page));
   }
@@ -13,6 +30,17 @@ class NavigatorUtil {
   static void goHomePage(BuildContext context) {
     Navigator.of(context).pushReplacement(MaterialPageRoute(builder: ((context) => const HomePage(title: 'Flutter Demo Home Page'))));
   }
+
+  /// 每日推荐歌曲
+  static void goDailySongsPage(BuildContext context) {
+    _navigateTo(context, Routs.dailySongs);
+  }
+
+   /// 播放歌曲页面
+  static void goPlaySongsPage(BuildContext context) {
+    _navigateTo(context, Routs.playSongs);
+  }
+
 }
 
 // 渐变效果

@@ -2,15 +2,11 @@ import 'dart:ui';
 
 import 'package:audioplayers/audioplayers.dart';
 import 'package:flutter/material.dart';
-// import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:listen_books/model/play_songs_model.dart';
-import 'package:listen_books/model/song.dart';
-// import 'package:listen_books/utils/audio_controller.dart';
 import 'package:listen_books/widget/lyric_page_widget.dart';
 import 'package:listen_books/widget/play_page_title_widget.dart';
 import 'package:listen_books/widget/v_empty_view.dart';
 import 'package:listen_books/widget/widget_play_bottom_menu.dart';
-import 'package:listen_books/widget/widget_round_img.dart';
 import 'package:listen_books/widget/widget_song_progress.dart';
 import 'package:provider/provider.dart';
 

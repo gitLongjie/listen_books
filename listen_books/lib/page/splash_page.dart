@@ -1,13 +1,10 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_screenutil/flutter_screenutil.dart';
 // import 'package:flutter_screenutil/flutter_screenutil.dart';
 // import 'package:fluttertoast/fluttertoast.dart';
 import 'package:listen_books/context.dart';
-import 'package:listen_books/model/play_songs_model.dart';
-import 'package:listen_books/page/home_page.dart';
 import 'package:listen_books/utils/navigator_util.dart';
 import 'package:listen_books/utils/net_utils.dart';
-import 'package:listen_books/utils/screen_utils.dart';
-import 'package:provider/provider.dart';
 
 class SplashPage extends StatefulWidget {
   const SplashPage({super.key});
@@ -76,7 +73,7 @@ class _SplashPageState extends State<SplashPage> with TickerProviderStateMixin {
 
   @override
   Widget build(BuildContext context) {
-    ScreenUtils.init(750, 1334);
+    ScreenUtil.init(context, designSize: const Size(750, 1334));
     final size = MediaQuery.of(context).size;
     Context.screenWidth = size.width;
     Context.screenHeight = size.height;

@@ -1,7 +1,9 @@
 import 'package:common_utils/common_utils.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:listen_books/model/daily_songs.dart';
 import 'package:listen_books/page/history_page.dart';
+import 'package:listen_books/utils/navigator_util.dart';
 import 'package:listen_books/utils/net_utils.dart';
 import 'package:listen_books/widget/common_text_style.dart';
 import 'package:listen_books/widget/h_empty_view.dart';
@@ -144,16 +146,16 @@ class IndexPageState extends State<IndexPage>
           return GestureDetector(
             behavior: HitTestBehavior.translucent,
             onTap: () {
-              // switch (index) {
-              //   case 0:
-              //     NavigatorUtil.goDailySongsPage(context);
-              //     break;
-              //   case 1:
-              //     break;
-              //   case 2:
-              //     NavigatorUtil.goTopListPage(context);
-              //     break;
-              // }
+              switch (index) {
+                case 0:
+                  NavigatorUtil.goDailySongsPage(context);
+                  break;
+                case 1:
+                  break;
+                case 2:
+                  // NavigatorUtil.goTopListPage(context);
+                  break;
+              }
             },
             child: Column(
               children: <Widget>[
@@ -223,7 +225,9 @@ class IndexPageState extends State<IndexPage>
               separatorBuilder: (context, index) {
                 return const HEmptyView(30);
               },
-              padding: const EdgeInsets.symmetric(horizontal: 15),
+              padding: EdgeInsets.symmetric(
+                horizontal: ScreenUtil().setWidth(150)
+              ),
               itemBuilder: (context, index) {
                 return PlayListWidget(
                   text: data[index].metaData?.title,

@@ -1,13 +1,14 @@
 
 import 'dart:convert';
 
+import 'package:fluro/fluro.dart';
 import 'package:flutter/material.dart';
 import 'package:listen_books/utils/net_utils.dart';
 // import 'package:get_it/get_it.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
 class Context{
-  // static late Router router;
+  static late FluroRouter router;
   static GlobalKey<NavigatorState> key = GlobalKey();
   static late SharedPreferences sp;
   static late double screenWidth;
