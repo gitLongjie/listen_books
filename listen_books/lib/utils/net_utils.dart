@@ -142,8 +142,14 @@ class NetUtils {
 
   static Widget showNetImage(String url,
       {double? width, double? height, BoxFit? fit}) {
-    return Image(
-      image: NetworkImage("$url&token=${_api.accessToken}", scale: width ?? 200),
+    Uri uri = Uri.parse(url);
+    if (!uri.hasQuery) {
+      url = "$url?token=${_api.accessToken}";
+    }else {
+      url = "$url&token=${_api.accessToken}";
+    }
+    return Image.network(
+      url,
       width: width,
       height: height,
       fit: fit,
