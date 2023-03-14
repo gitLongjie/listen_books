@@ -25,22 +25,13 @@ class IndexPage extends StatefulWidget {
 }
 
 
-// const List<String> types = [
-//   "全部",
-//   "流行",
-//   "华语",
-//   "民谣",
-//   "摇滚",
-//   "清新",
-//   "浪漫",
-//   "古风",
-//   "影视原声",
-//   "欧美",
-//   "儿童",
-//   "电子",
-//   "校园",
-//   "放松"
-// ];
+const List<String> types = [
+  "全部",
+  "专辑",
+  "歌手",
+  "最新添加",
+  "播放最多"
+];
 
 class IndexPageState extends State<IndexPage>
   with SingleTickerProviderStateMixin, AutomaticKeepAliveClientMixin  {
@@ -53,71 +44,71 @@ class IndexPageState extends State<IndexPage>
   void initState() {
     super.initState();
     //初始化controller并添加监听
-    // _tabController = TabController(length: types.length, vsync: this);
-    // _tabController.addListener(() => _onTabChanged());
+    _tabController = TabController(length: types.length, vsync: this);
+    _tabController.addListener(() => _onTabChanged());
   }
 
    void _onTabChanged() {
     if (_tabController.index.toDouble() == _tabController.animation?.value) {}
   }
 
-  // TabBar createTabBar()  {
-  //   return TabBar(
-  //     controller: _tabController,
-  //     tabs: types.map((item) {
-  //       return Tab(
-  //         height: 44,
-  //         text: item,
-  //       );
-  //     }).toList(),
-  //     isScrollable: true,
-  //     indicatorColor: Color.fromARGB(255, 225, 235, 209),
-  //     indicatorWeight: 3,
-  //     indicatorPadding: EdgeInsets.only(right: 0),
-  //   );
-  // }
+  TabBar createTabBar()  {
+    return TabBar(
+      controller: _tabController,
+      tabs: types.map((item) {
+        return Tab(
+          height: 44,
+          text: item,
+        );
+      }).toList(),
+      isScrollable: true,
+      indicatorColor: Color.fromARGB(255, 225, 235, 209),
+      indicatorWeight: 3,
+      indicatorPadding: EdgeInsets.only(right: 0),
+    );
+  }
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
       backgroundColor: Colors.white,
       appBar: AppBar(
-        // bottom: createTabBar(),
+       bottom: createTabBar(),
         title: const SearchBarWidget(),
       ),
-      body: SingleChildScrollView(
-        child: Column(
-          crossAxisAlignment: CrossAxisAlignment.start,
-          children: <Widget>[
-            Padding(
-              padding: const EdgeInsets.symmetric(
-                horizontal: 15,
-              ),
-              child: Column(
-                mainAxisSize: MainAxisSize.min,
-                crossAxisAlignment: CrossAxisAlignment.start,
-                children: <Widget>[
-                  const VEmptyView(40),
-                  _buildHomeCategoryList(),
-                  const VEmptyView(20),
-                  const Text(
-                    '推荐歌单',
-                    style: commonTextStyle,
-                  ),
-                ],
-              ),
-            ),
-            const VEmptyView(20),
-            _buildDay30PlayList(),
-          ],
-        ),
-      ),
-      // body: TabBarView(
-      //   controller: _tabController,
-      //   children: types.map((item) {
-      //     return Center(child: Text("${item}"));
-      //   }).toList(),
+      // body: SingleChildScrollView(
+      //   child: Column(
+      //     crossAxisAlignment: CrossAxisAlignment.start,
+      //     children: <Widget>[
+      //       Padding(
+      //         padding: const EdgeInsets.symmetric(
+      //           horizontal: 15,
+      //         ),
+      //         child: Column(
+      //           mainAxisSize: MainAxisSize.min,
+      //           crossAxisAlignment: CrossAxisAlignment.start,
+      //           children: <Widget>[
+      //             const VEmptyView(40),
+      //             _buildHomeCategoryList(),
+      //             const VEmptyView(20),
+      //             const Text(
+      //               '推荐歌单',
+      //               style: commonTextStyle,
+      //             ),
+      //           ],
+      //         ),
+      //       ),
+      //       const VEmptyView(20),
+      //       _buildDay30PlayList(),
+      //     ],
+      //   ),
       // ),
+      body: TabBarView(
+        controller: _tabController,
+        children: types.map((item) {
+          return Center(child: Text("${item}"));
+        }).toList(),
+      ),
     );
   }
 

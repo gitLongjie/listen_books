@@ -22,9 +22,7 @@ class NetUtils {
   static late final DioUtil _api ;
   static const String baseUrl = 'http://39.107.224.142:8802';
 
-  static void init() async {
-    Directory tempDir = await getTemporaryDirectory();
-    String tempPath = tempDir.path;
+  static init() async {
     _api = DioUtil();
     String? userJson = Context.sp.getString("user");
     if (null != userJson) {

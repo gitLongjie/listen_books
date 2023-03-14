@@ -31,9 +31,9 @@ class _HomePageState extends State<HomePage> {
     super.initState();
 
     _bottomNavPages
-      ..add(const IndexPage('音乐'))
-      ..add(const HistoryPage('听书'))
-      ..add(const FavoritePage('收藏'))
+      ..add(const IndexPage('全部'))
+      ..add(const HistoryPage('专辑'))
+      ..add(const FavoritePage('歌手'))
       ..add(const MinePage('我的')
     );
   }

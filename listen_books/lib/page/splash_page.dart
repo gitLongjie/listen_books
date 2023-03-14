@@ -42,33 +42,11 @@ class _SplashPageState extends State<SplashPage> with TickerProviderStateMixin {
 
   void goPage() async{
     await Context.initSp();
+    await NetUtils.init();
     await Context.initUser();
-    NetUtils.init();
+    
     // ignore: use_build_context_synchronously
     NavigatorUtil.goHomePage(context);
-    // Navigator.push(
-    //   context,
-    //   MaterialPageRoute(builder: (context) => const HomePage(title: 'Flutter Demo Home Page')),
-    // );
-    // UserModel userModel = Provider.of<UserModel>(context);
-    // userModel.initUser();
-    // PlaySongsModel playSongsModel = Provider.of<PlaySongsModel>(context);
-    // 判断是否有保存的歌曲列表
-    // if(Context.sp.containsKey('playing_songs')){
-    //   List<String>? songs = Context.sp.getStringList('playing_songs');
-    //   // playSongsModel.addSongs(songs!.map((s) => Song.fromJson(FluroConvertUtils.string2map(s))).toList());
-    //   int? index = Context.sp.getInt('playing_index');
-    //   // playSongsModel.curIndex = index!;
-    // }
-    // if (userModel.user != null) {
-    //   await NetUtils.refreshLogin(context).then((value){
-    //     if(value.data != -1){
-    //       NavigatorUtil.goHomePage(context);
-    //     }
-    //   });
-    //   Provider.of<PlayListModel>(context).user = userModel.user;
-    // } else
-    //   NavigatorUtil.goLoginPage(context);
   }
 
   @override
