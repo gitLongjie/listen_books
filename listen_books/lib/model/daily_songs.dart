@@ -1,5 +1,6 @@
 import 'package:listen_books/model/song.dart';
 
+
 class DailySongsData {
   List<Song> _songs = [];
 

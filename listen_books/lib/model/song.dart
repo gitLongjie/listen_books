@@ -87,3 +87,19 @@ class Song {
     return 'Song{id: $id, name: $filepath, artists: $metaData}';
   }
 }
+
+class SongDirectories {
+  String name = "";
+
+  SongDirectories.fromJson(Map<String, dynamic> json)
+    : name = json["name"];
+
+  Map<String, dynamic> toJson() => {
+    "name": name
+  };
+
+  @override
+  String toString() {
+    return 'SongDirectories{name: $name}';
+  }
+}

@@ -190,4 +190,7 @@ class NetUtils {
     }
     return DailySongsData.fromJson(response.data);
   }
+
+  /// 获取所有的歌曲目录
+  static 
 }

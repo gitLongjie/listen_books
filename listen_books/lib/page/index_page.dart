@@ -1,3 +1,5 @@
+// ignore_for_file: constant_identifier_names
+
 import 'package:common_utils/common_utils.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
@@ -12,6 +14,8 @@ import 'package:listen_books/widget/v_empty_view.dart';
 import 'package:listen_books/widget/widget_future_builder.dart';
 import 'package:listen_books/widget/widget_play_list.dart';
 
+import '../widget/widget_media_list_item.dart';
+
 class IndexPage extends StatefulWidget {
   final String _title;
 
@@ -24,18 +28,25 @@ class IndexPage extends StatefulWidget {
 
 }
 
-
-const List<String> types = [
-  "全部",
-  "专辑",
-  "歌手",
-  "最新添加",
-  "播放最多"
-];
-
 class IndexPageState extends State<IndexPage>
   with SingleTickerProviderStateMixin, AutomaticKeepAliveClientMixin  {
   late TabController _tabController;
+
+  static const List<String> types = [
+    "全部",
+    "专辑",
+    "歌手",
+    "最新添加",
+    "播放最多"
+  ];
+
+  static const List<Widget> type_views = [
+    Center(child: WidgetMediaListItemPage()),
+    Center(child: Text('Content of Tab Two')),
+    Center(child: Text('Content of Tab Three')),
+    Center(child: Text('Content of Tab Foure')),
+    Center(child: Text('Content of Tab Five')),
+  ];
 
   @override
   bool get wantKeepAlive => true;
@@ -62,9 +73,10 @@ class IndexPageState extends State<IndexPage>
         );
       }).toList(),
       isScrollable: true,
-      indicatorColor: Color.fromARGB(255, 225, 235, 209),
+      physics: const BouncingScrollPhysics(),
+      indicatorColor: const Color.fromARGB(255, 225, 235, 209),
       indicatorWeight: 3,
-      indicatorPadding: EdgeInsets.only(right: 0),
+      indicatorPadding: const EdgeInsets.only(right: 0),
     );
   }
 
@@ -105,9 +117,11 @@ class IndexPageState extends State<IndexPage>
       // ),
       body: TabBarView(
         controller: _tabController,
-        children: types.map((item) {
-          return Center(child: Text("${item}"));
-        }).toList(),
+        physics: const BouncingScrollPhysics(),
+        children: type_views,
+        // children: types.map((item) {
+        //   return Center(child: Text("${item}"));
+        // }).toList(),
       ),
     );
   }

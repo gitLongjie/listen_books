@@ -25,7 +25,7 @@ class PlayWidget extends StatelessWidget {
         if (model.allSongs.isEmpty) {
           child = const Text('暂无正在播放的歌曲');
         } else {
-          Song curSong = model.curSong;
+          Song? curSong = model.curSong;
           child = GestureDetector(
             behavior: HitTestBehavior.translucent,
             onTap: () {

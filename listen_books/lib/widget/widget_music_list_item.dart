@@ -18,13 +18,14 @@ class WidgetMusicListItem extends StatelessWidget {
     return GestureDetector(
       behavior: HitTestBehavior.translucent,
       onTap: onTap,
-      child: Container(
+      child: SizedBox(
         width: Context.screenWidth,
         height: ScreenUtil().setWidth(120),
         child: Row(
           mainAxisSize: MainAxisSize.min,
           crossAxisAlignment: CrossAxisAlignment.center,
           children: <Widget>[
+            // ignore: unnecessary_null_comparison
             _data.index == null && _data.picUrl == null
                 ? Container()
                 : const HEmptyView(15),
