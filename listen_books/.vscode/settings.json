@@ -1,3 +1,8 @@
 {
-    "cmake.sourceDirectory": "${workspaceFolder}/windows/flutter"
+    "cmake.sourceDirectory": "${workspaceFolder}/windows/flutter",
+    "files.associations": {
+        "vector": "cpp",
+        "chrono": "cpp",
+        "functional": "cpp"
+    }
 }

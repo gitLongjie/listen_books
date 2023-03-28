@@ -7,7 +7,6 @@ import 'package:listen_books/model/daily_songs.dart';
 import 'package:listen_books/page/history_page.dart';
 import 'package:listen_books/utils/navigator_util.dart';
 import 'package:listen_books/utils/net_utils.dart';
-import 'package:listen_books/widget/common_text_style.dart';
 import 'package:listen_books/widget/h_empty_view.dart';
 import 'package:listen_books/widget/search_bar.dart';
 import 'package:listen_books/widget/v_empty_view.dart';

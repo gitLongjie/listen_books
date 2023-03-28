@@ -36,6 +36,11 @@ class NavigatorUtil {
     _navigateTo(context, Routs.dailySongs);
   }
 
+  /// 歌单列表
+  static void goSongListPage(BuildContext context) {
+    _navigateTo(context, Routs.listSongs);
+  }
+
    /// 播放歌曲页面
   static void goPlaySongsPage(BuildContext context) {
     _navigateTo(context, Routs.playSongs);

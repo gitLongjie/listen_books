@@ -18,11 +18,10 @@ class DioUtil {
         options.path = 'http://39.107.224.142:8802${options.path}';
         // x-access-token=eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VybmFtZSI6ImJyaWdlIiwiaWF0IjoxNjY3MzAxNjUyfQ.tIYLGrUN1XUmeNv52RpWEfdkRCGctw0feBzNgkieh_I; Path=/; Expires=Mon, 01 Nov 2027 16:24:42 GMT;
       }
-      options.headers['Authorization'] = 'Bearer $accessToken';
+      options.headers['x-nd-authorization'] = 'Bearer $accessToken';
       return handler.next(options);
     }, onError: (DioError error, handler) async {
-      if ((error.response?.statusCode == 401 &&
-        error.response?.data['error'] == "Authentication Error")) {
+      if (error.response?.statusCode == 401) {
           if (await refreshToken()) {
             return handler.resolve(await _retry(error.requestOptions));
           }
@@ -44,8 +43,8 @@ class DioUtil {
   }
 
   Future<bool> refreshToken() async {
-    String username = 'gust';
-    String password = 'gust';
+    String username = 'brige';
+    String password = '123qwe';
     String? userJson = Context.sp.getString("user");
     if (null != userJson) {
       User user = User.fromJson(json.decode(userJson));
@@ -54,7 +53,7 @@ class DioUtil {
     }
 
     final response = await api
-        .post('/api/v1/auth/login', data: {'username': username, 'password': password});
+        .post('/auth/login', data: {'username': username, 'password': password});
 
     if (response.statusCode == 200) {
       accessToken = response.data["token"];

@@ -30,6 +30,13 @@ class Context{
     if (userJson == null) {
       var user = await NetUtils.login(null, 'gust', 'gust');
       Context.sp.setString('user', json.encode(user.toJson()));
+      return;
+    }
+
+    var user = jsonDecode(userJson);
+    if (user["username"] == null || null == user["password"]) {
+      user = await NetUtils.login(null, 'gust', 'gust');
+      Context.sp.setString('user', json.encode(user.toJson()));
     }
   }
 

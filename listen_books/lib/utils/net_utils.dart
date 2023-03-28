@@ -1,20 +1,16 @@
 
 import 'dart:convert';
-import 'dart:io';
+// ignore: unused_import
 
-// import 'package:cookie_jar/cookie_jar.dart';
-// import 'package:dio/adapter.dart';
 import 'package:dio/dio.dart';
-// import 'package:dio_cookie_manager/dio_cookie_manager.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter_secure_storage/flutter_secure_storage.dart';
 import 'package:listen_books/context.dart';
+import 'package:listen_books/model/album.dart';
 import 'package:listen_books/model/daily_songs.dart';
 import 'package:listen_books/model/lyric.dart';
 import 'package:listen_books/model/user.dart';
 import 'package:listen_books/utils/dio_util.dart';
 import 'package:listen_books/widget/loading.dart';
-import 'package:path_provider/path_provider.dart';
 
 // import 'package:http/http.dart' as http;
 
@@ -69,12 +65,13 @@ class NetUtils {
     BuildContext context,
     String url, {
     Map<String, dynamic>? params,
+    Options? options,
     bool isShowLoading = true,
   }) async {
     if (isShowLoading) Loading.showLoading(context);
     try {
       // Url.parse(context)
-      return await Dio().get(url, queryParameters: params);
+      return await _api.api.get(baseUrl + url, queryParameters: params, options: options);
       // return await _dio.get(url, queryParameters: params);
     } on DioError catch (e) {
       if (e == null) {
@@ -158,9 +155,12 @@ class NetUtils {
     Map<String,dynamic> map = {};
     map['username']=name;
     map['password']=pwd;
-    var response = await _post(context, '/api/v1/auth/login', data: map, isShowLoading: false);
+    var response = await _post(context, '/auth/login', data: map, isShowLoading: false);
 
-    return User.fromJson(response.data);
+    var user = User.fromJson(response.data);
+    user.name ??= name;
+    user.password ??= pwd;
+    return user;
   }
 
   /// 每日推荐歌曲
@@ -191,6 +191,32 @@ class NetUtils {
     return DailySongsData.fromJson(response.data);
   }
 
-  /// 获取所有的歌曲目录
-  static 
+  /// 获取专辑
+  static Future<AlbumList> getAlbum(BuildContext context) async {
+    String? s = Context.sp.getString('user');
+    if (s == null) {
+      return AlbumList(data: []);
+    }
+    User user = User.fromJson(json.decode(s));
+    String? token = user.token;
+    Map<String,dynamic> map = {};
+    map['_end']= 12;
+    map['_start']= 0;
+    map['_sort']= 'recently_added';
+    var response = await _get(
+      context,
+      '/api/album',
+      params: map,
+      options: Options(headers: {
+        "Content-Type": "application/json",
+        "x-nd-authorization": "Bearer $token",
+      }),
+      isShowLoading:false
+    );
+    print(response.data);
+    if (response.statusCode! >= 400) {
+      return AlbumList(data: []);
+    }
+    return AlbumList.fromJson(response.data);
+  }
 }

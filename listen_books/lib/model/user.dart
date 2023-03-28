@@ -6,21 +6,34 @@ import 'package:listen_books/context.dart';
 import 'package:listen_books/utils/net_utils.dart';
 
 class User {
-  String? name = "gust";
-  String? password = "gust";
+  String? id = "";
+  bool? isAdmin = false;
+  String? name = "brige";
+  String? username = "";
+  String? password = "123qwe";
+  String? subsonicToken = "";
   String? token = '';
+  String? subsonicSalt = "";
 
   User({this.name, this.password, this.token});
 
   User.fromJson(Map<String, dynamic> json)
-      : name = json['username'],
-        password = json['password'],
-        token = json['token'];
+      : id = json['id'],
+        isAdmin = json['isAdmin'],
+        name = json['name'],
+        username = json['username'],
+        subsonicToken = json['subsonicToken'],
+        token = json['token'],
+        subsonicSalt = json['subsonicSalt'];
 
   Map<String, dynamic> toJson() => {
-      'username': name,
-      'password': password,
+      'id': id,
+      'isAdmin': isAdmin,
+      'name': name,
+      'username': username,
+      'subsonicToken': subsonicToken,
       'token': token,
+      'subsonicSalt': subsonicSalt
   };
 }
 
