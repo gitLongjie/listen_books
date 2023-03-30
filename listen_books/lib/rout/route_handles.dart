@@ -22,7 +22,10 @@ var dailySongsHandler = Handler(
 
 var listSongsHandler = Handler(
   handlerFunc: (BuildContext? context, Map<String, List<Object>> params) {
-    return const SongListPage();
+    String id= params['id']![0].toString();
+    String name = params['name']![0].toString();
+    String artist = params['artist']![0].toString();
+    return SongListPage(id: id, name:name, artist:artist);
   }
 );
 

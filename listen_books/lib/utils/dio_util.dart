@@ -57,6 +57,7 @@ class DioUtil {
 
     if (response.statusCode == 200) {
       accessToken = response.data["token"];
+      Context.sp.setString("user", response.data.toString());
       return true;
     } else {
       // refresh token is wrong

@@ -216,7 +216,7 @@ class IndexPageState extends State<IndexPage>
 
   Widget _buildDay30PlayList() {
     return CustomFutureBuilder<DailySongsData>(
-      futureFunc: NetUtils.getDailySongsData,
+      futureFunc: NetUtils.getAlbumSongs,
       builder: (context, snapshot) {
         var data = snapshot.songs;
         if (data == null) {
@@ -234,8 +234,8 @@ class IndexPageState extends State<IndexPage>
               ),
               itemBuilder: (context, index) {
                 return PlayListWidget(
-                  text: data[index].metaData?.title,
-                  picUrl: data[index].metaData?.album_art,
+                  text: 'test', //data[index].metaData?.title,
+                  picUrl: 'test', //data[index].metaData?.album_art,
                   playCount: 1,
                   maxLines: 2,
                   onTap: () {

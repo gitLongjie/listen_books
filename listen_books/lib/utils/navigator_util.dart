@@ -37,8 +37,9 @@ class NavigatorUtil {
   }
 
   /// 歌单列表
-  static void goSongListPage(BuildContext context) {
-    _navigateTo(context, Routs.listSongs);
+  static void goAlbumSongListPage(BuildContext context, param) {
+    // ignore: prefer_interpolation_to_compose_strings
+    _navigateTo(context, '${Routs.listSongs}?'+param);
   }
 
    /// 播放歌曲页面

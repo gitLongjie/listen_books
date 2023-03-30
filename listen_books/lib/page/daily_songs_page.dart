@@ -1,4 +1,5 @@
 import 'dart:async';
+import 'dart:convert';
 
 import 'package:common_utils/common_utils.dart';
 import 'package:flutter/material.dart';
@@ -8,6 +9,7 @@ import 'package:listen_books/model/daily_songs.dart';
 import 'package:listen_books/model/music.dart';
 import 'package:listen_books/model/play_songs_model.dart';
 import 'package:listen_books/model/song.dart';
+import 'package:listen_books/model/user.dart';
 import 'package:listen_books/utils/navigator_util.dart';
 import 'package:listen_books/utils/net_utils.dart';
 import 'package:listen_books/widget/widget_music_list_item.dart';
@@ -80,7 +82,7 @@ class _DailySongsPageState extends State<DailySongsPage> {
                   title: '每日推荐',
                 ),
                 CustomSliverFutureBuilder<DailySongsData>(
-                  futureFunc: NetUtils.getDailySongsData,
+                  futureFunc: NetUtils.getAlbumSongs,
                   builder: (context, data) {
                     if (data.songs == null) {
                       setCount(0);
@@ -95,12 +97,19 @@ class _DailySongsPageState extends State<DailySongsPage> {
                                 (context, index) {
                               this.data = data;
                               var d = data.songs![index];
+                              String? userJson = Context.sp.getString("user");
+                              if (null == userJson) {
+                                return Container();
+                              }
+                              var user = User.fromJson(json.decode(userJson));
+                              var picUrl = "${NetUtils.baseUrl}rest/getCoverArt?u=${user.name}&f=json&v=${NetUtils.version}";
+                              picUrl += "&c=${NetUtils.clientName}&id=${d.id}";
                               return WidgetMusicListItem(
                                 MusicData(
                                     mvid: 0,
-                                    picUrl: d.metaData!.album_art,
-                                    songName: d.metaData!.title,
-                                    artists: d.metaData!.artist,
+                                    picUrl: picUrl,
+                                    songName: '',//d.metaData!.title,
+                                    artists: '', //d.metaData!.artist,
                                 ),
                                     //"${ d.metaData!.artists.map((a) => a.name).toList().join('/')} - ${d.album.name}"),
                                 onTap: () {
@@ -125,15 +134,15 @@ class _DailySongsPageState extends State<DailySongsPage> {
   }
 
   void playSongs(PlaySongsModel model, int index) {
-    model.playSongs(
-      data.songs!.map((d) => Song(
-          d.id,
-          filepath: d.filepath,
-          metaData: d.metaData
-        )
-      ).toList(),
-      index: index,
-    );
+    model.playSongs(data.songs!, index:index);
+    //   data.songs!.map((d) => Song(
+    //       d.id,
+    //       filepath: d.filepath,
+    //       metaData: d.metaData
+    //     )
+    //   ).toList(),
+    //   index: index,
+    // );
     NavigatorUtil.goPlaySongsPage(context);
   }
 

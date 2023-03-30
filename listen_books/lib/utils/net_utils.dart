@@ -8,6 +8,7 @@ import 'package:listen_books/context.dart';
 import 'package:listen_books/model/album.dart';
 import 'package:listen_books/model/daily_songs.dart';
 import 'package:listen_books/model/lyric.dart';
+import 'package:listen_books/model/song.dart';
 import 'package:listen_books/model/user.dart';
 import 'package:listen_books/utils/dio_util.dart';
 import 'package:listen_books/widget/loading.dart';
@@ -17,6 +18,8 @@ import 'package:listen_books/widget/loading.dart';
 class NetUtils {
   static late final DioUtil _api ;
   static const String baseUrl = 'http://39.107.224.142:8802';
+  static const String version = '1.8.0';
+  static const String clientName = 'clinet1';
 
   static init() async {
     _api = DioUtil();
@@ -25,40 +28,6 @@ class NetUtils {
       User user = User.fromJson(json.decode(userJson));
       _api.accessToken = user.token ?? _api.accessToken;
     }
-    // CookieJar cj = PersistCookieJar();
-    // _dio = Dio(BaseOptions(baseUrl: '$baseUrl:1020', followRedirects: false))
-      // ..interceptors.add(CookieManager(cj))
-      // ..interceptors
-      //     .add(LogInterceptor(responseBody: true, requestBody: true));
-    
-    // 海外華人可使用 nondanee/UnblockNeteaseMusic
-    // (_dio.httpClientAdapter as DefaultHttpClientAdapter).onHttpClientCreate =
-    //     (client) {
-    //   client.findProxy = (uri) {
-    //     var host = uri.host;
-    //     if (host == 'music.163.com' ||
-    //         host == 'interface.music.163.com' ||
-    //         host == 'interface3.music.163.com' ||
-    //         host == 'apm.music.163.com' ||
-    //         host == 'apm3.music.163.com' ||
-    //         host == '59.111.181.60' ||
-    //         host == '223.252.199.66' ||
-    //         host == '223.252.199.67' ||
-    //         host == '59.111.160.195' ||
-    //         host == '59.111.160.197' ||
-    //         host == '59.111.181.38' ||
-    //         host == '193.112.159.225' ||
-    //         host == '118.24.63.156' ||
-    //         host == '59.111.181.35' ||
-    //         host == '39.105.63.80' ||
-    //         host == '47.100.127.239' ||
-    //         host == '103.126.92.133' ||
-    //         host == '103.126.92.132') {
-    //       return 'PROXY YOURPROXY;DIRECT';
-    //     }
-    //     return 'DIRECT';
-    //   };
-    // };
   }
 
   static Future<Response> _get(
@@ -137,12 +106,13 @@ class NetUtils {
 
   static Widget showNetImage(String url,
       {double? width, double? height, BoxFit? fit}) {
-    Uri uri = Uri.parse(url);
-    if (!uri.hasQuery) {
-      url = "$url?token=${_api.accessToken}";
-    }else {
-      url = "$url&token=${_api.accessToken}";
-    }
+      print(url);
+    // Uri uri = Uri.parse(url);
+    // if (!uri.hasQuery) {
+    //   url = "$url?token=${_api.accessToken}";
+    // }else {
+    //   url = "$url&token=${_api.accessToken}";
+    // }
     return Image.network(
       url,
       width: width,
@@ -163,20 +133,25 @@ class NetUtils {
     return user;
   }
 
-  /// 每日推荐歌曲
-  static Future<DailySongsData> getDailySongsData(BuildContext context) async {
+  /// 专辑里的媒体
+  static Future<SongList> getAlbumSongs(BuildContext context, {
+    Map<String,dynamic>? params}) async {
     String? s = Context.sp.getString('user');
     if (s == null) {
-      return DailySongsData(songs: []);
+      return SongList(songs: []);
     }
     User user = User.fromJson(json.decode(s));
     Map<String,dynamic> map = {};
-    map['playlistname']="day_30";
+    map['_end']=0;
+    map['_order']='ASC';
+    map['_sort']='album';
+    map['_start']=0;
+    map['album_id']=params!['id'];
     String? token = user.token;
-    var response = await _post(
+    var response = await _get(
       context,
-      '/api/v1/playlist/load',
-      data: map,
+      '/api/song',
+      params: map,
       options: Options(headers: {
         "Content-Type": "application/json",
             "Authorization":
@@ -186,9 +161,9 @@ class NetUtils {
     print(response.data);
     print(response.statusCode);
     if (response.statusCode! >= 400) {
-      return DailySongsData(songs: []);
+      return SongList(songs: []);
     }
-    return DailySongsData.fromJson(response.data);
+    return SongList.fromJson(response.data);
   }
 
   /// 获取专辑

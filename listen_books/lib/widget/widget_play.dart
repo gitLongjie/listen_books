@@ -33,15 +33,15 @@ class PlayWidget extends StatelessWidget {
             },
             child: Row(
               children: <Widget>[
-                RoundImgWidget(curSong.metaData!.album_art, 80, fit: BoxFit.fill),
+                RoundImgWidget(curSong.artist, 80, fit: BoxFit.fill),
                 const HEmptyView(10),
                 Expanded(
                   child: Column(
                     crossAxisAlignment: CrossAxisAlignment.start,
                     mainAxisSize: MainAxisSize.min,
                     children: <Widget>[
-                      Text(curSong.metaData!.title, style: commonTextStyle, maxLines: 1, overflow: TextOverflow.ellipsis,),
-                      Text(curSong.metaData!.artist, style: common13TextStyle,),
+                      Text(curSong.title, style: commonTextStyle, maxLines: 1, overflow: TextOverflow.ellipsis,),
+                      Text(curSong.artist, style: common13TextStyle,),
                     ],
                   ),
                 ),

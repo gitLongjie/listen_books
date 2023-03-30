@@ -11,8 +11,8 @@ class WidgetMediaListItemPage extends StatelessWidget {
   Widget _getAllSonds(context, index, List<Album> dirs) {
     return GestureDetector(
       onTap: () {
-        print("click" + dirs[index].toString());
-        NavigatorUtil.goSongListPage(context);
+        String param = 'id=${dirs[index].id}&name=${dirs[index].name}&artist=${dirs[index].artist}';
+        NavigatorUtil.goAlbumSongListPage(context, param);
       },
       child: Container(
         margin: const EdgeInsets.all(10),

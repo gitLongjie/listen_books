@@ -26,7 +26,7 @@ class _LyricPageState extends State<LyricPage> with TickerProviderStateMixin {
   late LyricData _lyricData;
   List<Lyric>? lyrics;
   AnimationController? _lyricOffsetYController;
-  int curSongId = -1;
+  String curSongId = '';
   Timer? dragEndTimer; // 拖动结束任务
   late Function() dragEndFunc;
   Duration dragEndDuration = const Duration(milliseconds: 1000);
@@ -64,7 +64,7 @@ class _LyricPageState extends State<LyricPage> with TickerProviderStateMixin {
     // if (curSongId != widget.model?.curSong.id) {
     if (curSongId != 0) {
       lyrics = null;
-      curSongId = 0; // widget.model!.curSong.id;
+      curSongId = ''; // widget.model!.curSong.id;
   //    _request();
     }
 

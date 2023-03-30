@@ -81,9 +81,10 @@ class PlaySongsModel with ChangeNotifier{
     }
 
     User user = User.fromJson(json.decode(userJson));
-    String url = "${NetUtils.baseUrl}/media${_songs[curIndex].filepath!}";
+    String url = "${NetUtils.baseUrl}/rest/stream?u=${user.name}&t=${user.subsonicToken}";
+    url += "&s=${user.subsonicSalt}&f=json&v=${NetUtils.version}&c=${NetUtils.clientName}&id=${_songs[curIndex].id}";
     url = Uri.encodeFull(url);
-    url += "?token=${user.token!}";
+    url += "&token=${user.token!}";
     //url = "http://39.107.224.142:8802/media/music/Beyond/BEYOND%E3%80%90%E6%B5%B7%E9%97%8A%E5%A4%A9%E7%A9%BA%E3%80%91Music%20Video.mp3?token=${user.token!}";
     Source source = UrlSource(url);
     _audioPlayer.play(source);
